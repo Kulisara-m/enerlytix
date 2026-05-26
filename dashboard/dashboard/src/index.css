@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --font-nunitoSans: 'Nunito Sans', sans-serif;
+  --font-gilroy: 'Gilroy', sans-serif;
+}
+
+/* ============ RESET & BASE ============ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  background: #F5F6FA;
+  color: #202224;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}

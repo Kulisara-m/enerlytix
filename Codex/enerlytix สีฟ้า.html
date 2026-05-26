@@ -1,0 +1,1588 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Enerlytix Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /*กำหนด Theme ทั้งหมดของเว็บ*/
+    :root {
+      --teal: #3b82f6;
+      --teal2: #2563eb;
+      --blue: #4f8fff;
+      --orange: #ff7a45;
+      --amber: #ffb830;
+      --red: #ff4d6a;
+      --green: #00c48c;
+      --purple: #9b8fff;
+
+      --ink: #0f1117;
+      --ink2: #f5f6fa;
+      --ink3: #eceef4;
+      --muted: #8a90a0;
+      --sub: #6b7180;
+      --line: #dde0eb;
+      --line2: #eceef4;
+      --panel: #ffffff;
+      --bg: #f0f2f8;
+      --glow: rgba(59, 130, 246, .12);
+
+      --r: 14px;
+      --side: 240px;
+      --font: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+      --mono: "Space Mono", monospace;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      max-width: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: #2d3142;
+      font-family: var(--font);
+      line-height: 1.4;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    select {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--line2);
+      border-radius: 4px;
+    }
+
+    /* ─── LAYOUT ─── */
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: var(--side) 1fr;
+    }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: var(--panel);
+      border-right: 1px solid var(--line2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    .brand {
+      padding: 28px 24px 20px;
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+      border-bottom: 1px solid var(--line2);
+    }
+
+    .brand .accent {
+      color: #1d6fe8;
+    }
+
+    .brand-sub {
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .nav {
+      flex: 1;
+      padding: 18px 14px;
+      overflow-y: auto;
+    }
+
+    .nav-section {
+      padding: 16px 12px 6px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .nav-btn {
+      width: 100%;
+      height: 42px;
+      padding: 0 14px;
+      margin-bottom: 4px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--sub);
+      font-size: 14px;
+      font-weight: 500;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav-btn:hover {
+      background: var(--line2);
+      color: var(--ink);
+    }
+
+    .nav-btn.active {
+      background: rgba(59, 130, 246, .1);
+      color: #1d6fe8;
+      font-weight: 700;
+    }
+
+    .nav-btn svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      opacity: 0.8;
+    }
+
+    .nav-btn.active svg {
+      opacity: 1;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--line2);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-right: 6px;
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    /* ─── MAIN ─── */
+    .main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line2);
+      position: sticky;
+      top: 0;
+      z-index: 8;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: var(--sub);
+      font-size: 13px;
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(0, 196, 140, .08);
+      border: 1px solid rgba(0, 196, 140, .2);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* ─── CONTENT ─── */
+    .content {
+      padding: 20px 28px 40px;
+      flex: 1;
+    }
+
+    /* ─── CONTROLS ─── */
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .segment {
+      display: flex;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      height: 40px;
+    }
+
+    .segment button {
+      min-width: 90px;
+      border: 0;
+      background: transparent;
+      color: var(--sub);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 0 16px;
+      transition: background 0.15s, color 0.15s;
+      border-right: 1px solid var(--line);
+    }
+
+    .segment button:last-child {
+      border-right: 0;
+    }
+
+    .segment button.active {
+      background: #1d6fe8;
+      color: #fff;
+    }
+
+    .segment button:not(.active):hover {
+      background: var(--line2);
+      color: var(--ink);
+    }
+
+    .selects {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .select-pill {
+      height: 40px;
+      min-width: 80px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+      position: relative;
+      user-select: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    .select-pill:hover {
+      border-color: var(--teal);
+    }
+
+    .select-pill.open {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, .15);
+    }
+
+    .select-pill svg {
+      width: 14px;
+      height: 14px;
+      transition: transform .2s;
+      opacity: 0.7;
+    }
+
+    .select-pill.open svg {
+      transform: rotate(180deg);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 100%;
+      max-height: 200px;
+      overflow-y: auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, .12);
+      z-index: 100;
+      padding: 5px 0;
+      display: none;
+    }
+
+    .select-pill.open .dropdown {
+      display: block;
+    }
+
+    .dropdown-item {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      color: var(--sub);
+      transition: background .1s, color .1s;
+    }
+
+    .dropdown-item:hover {
+      background: var(--line2);
+      color: var(--ink);
+    }
+
+    .dropdown-item.active {
+      color: var(--teal);
+    }
+
+    /* ─── METRICS ─── */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .metrics.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line2);
+      border-radius: var(--r);
+      padding: 18px 18px 16px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .metric::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #1d6fe8, transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .metric:hover {
+      border-color: #aac4f0;
+    }
+
+    .metric:hover::before {
+      opacity: 1;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .metric-value {
+      font-family: var(--mono);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+      letter-spacing: -1px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .metric-unit {
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--sub);
+      letter-spacing: 0;
+    }
+
+    .metric-footer {
+      margin-top: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .metric-footer.up {
+      color: var(--green);
+    }
+
+    .metric-footer.down {
+      color: var(--red);
+    }
+
+    .metric-footer.stable {
+      color: #1d6fe8;
+    }
+
+    .metric-footer.warn {
+      color: var(--amber);
+    }
+
+    /* ─── CARDS ─── */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line2);
+      border-radius: var(--r);
+    }
+
+    .chart-card {
+      padding: 22px 24px 18px;
+      margin-bottom: 16px;
+    }
+
+    .chart-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.2px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(59, 130, 246, .08);
+      border: 1px solid rgba(59, 130, 246, .2);
+      color: #1d6fe8;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .chart-wrap {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    svg.chart {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    svg.chart circle {
+      cursor: pointer;
+    }
+
+    svg.chart rect[rx] {
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+
+    svg.chart rect[rx]:hover {
+      opacity: 0.75;
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-top: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--sub);
+      justify-content: center;
+    }
+
+    .legend span {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot.actual {
+      background: #2d7ff9;
+    }
+
+    .dot.forecast {
+      background: var(--orange);
+    }
+
+    /* ─── BOTTOM GRID ─── */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 16px;
+    }
+
+    .mini-card {
+      padding: 20px 22px 18px;
+    }
+
+    /* ─── APPLIANCE ─── */
+    .appliance-wrap {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 24px;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .donut {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: conic-gradient(#2d7ff9 0 38%, #ff7a45 38% 56%, #4f8fff 56% 70%, #ffb830 70% 82%, #c5c9d6 82% 100%);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .donut::after {
+      content: "";
+      position: absolute;
+      inset: 34px;
+      background: var(--panel);
+      border-radius: 50%;
+    }
+
+    .appliance-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .appliance-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--sub);
+    }
+
+    .appliance-row strong {
+      margin-left: auto;
+      color: var(--ink);
+      font-weight: 700;
+      font-family: var(--mono);
+    }
+
+    /* ─── HEAT MAP ─── */
+    .usage-strip {
+      display: grid;
+      grid-template-columns: repeat(24, 1fr);
+      gap: 3px;
+      margin-top: 18px;
+    }
+
+    .usage-cell {
+      height: 26px;
+      border-radius: 3px;
+      background: var(--heat);
+    }
+
+    .hours {
+      display: grid;
+      grid-template-columns: repeat(24, 1fr);
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 10px;
+      text-align: center;
+    }
+
+    .heat-legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .heat-swatch {
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      border-radius: 3px;
+    }
+
+    /* ─── BILL ─── */
+    .bill-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .bill-panel {
+      border: 1px solid var(--line2);
+      border-radius: var(--r);
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    .bill-panel h2 {
+      padding: 22px 24px 14px;
+      border-bottom: 1px solid var(--line2);
+    }
+
+    .bill-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 54px;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--line2);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--sub);
+    }
+
+    .bill-row:last-child {
+      border-bottom: 0;
+    }
+
+    .bill-row small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .bill-amount {
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .bill-row.total {
+      color: #1d6fe8;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .bill-row.total .bill-amount {
+      color: #1d6fe8;
+      font-size: 16px;
+    }
+
+    /* ─── ALERT ─── */
+    .alert-table {
+      border: 1px solid var(--line2);
+      border-radius: var(--r);
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th {
+      height: 48px;
+      background: var(--ink2);
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: left;
+      padding: 0 20px;
+    }
+
+    td {
+      height: 72px;
+      border-bottom: 1px solid var(--line2);
+      color: var(--ink);
+      font-weight: 500;
+      padding: 0 20px;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 15%;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 10%;
+    }
+
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 15%;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+      width: 45%;
+    }
+
+    th:nth-child(5),
+    td:nth-child(5) {
+      width: 15%;
+      text-align: center;
+    }
+
+    td:nth-child(1) {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--sub);
+    }
+
+    td:nth-child(2) {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--sub);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .warning {
+      background: rgba(255, 184, 48, .12);
+      color: var(--amber);
+      border: 1px solid rgba(255, 184, 48, .25);
+    }
+
+    .critical {
+      background: rgba(255, 77, 106, .12);
+      color: var(--red);
+      border: 1px solid rgba(255, 77, 106, .25);
+    }
+
+    /* ─── TOOLTIP ─── */
+    .chart-tooltip {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999;
+      background: var(--ink);
+      color: #fff;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
+      display: none;
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1300px) {
+      .metrics {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      :root {
+        --side: 200px;
+      }
+
+      .content {
+        padding-inline: 18px;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .bill-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --side: 0px;
+      }
+
+      .app {
+        display: block;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 0;
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 10px 16px;
+        gap: 10px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line2);
+      }
+
+      .brand {
+        padding: 0;
+        border: 0;
+        flex-shrink: 0;
+      }
+
+      .brand-sub {
+        display: none;
+      }
+
+      .nav {
+        display: flex;
+        gap: 4px;
+        overflow-x: auto;
+        padding: 0;
+        flex: 1;
+      }
+
+      .nav-section {
+        display: none;
+      }
+
+      .nav-btn {
+        height: 34px;
+        width: auto;
+        padding: 0 12px;
+        font-size: 12px;
+        margin: 0;
+        border-radius: 8px;
+        white-space: nowrap;
+      }
+
+      .sidebar-footer {
+        display: none;
+      }
+
+      h1 {
+        font-size: 17px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .metrics {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .metric-value {
+        font-size: 20px;
+      }
+
+      .appliance-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-card,
+      .mini-card {
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <div><span class="accent">Ener</span>lytix</div>
+        <div class="brand-sub">Energy Analysis</div>
+      </div>
+      <nav class="nav">
+        <div class="nav-section">Overview</div>
+        <button class="nav-btn active" data-page="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </button>
+        <div class="nav-section">Analysis</div>
+        <button class="nav-btn" data-page="forecast">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+          Energy Forecast
+        </button>
+        <button class="nav-btn" data-page="bill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2" />
+            <line x1="2" y1="10" x2="22" y2="10" />
+          </svg>
+          Bill Calculator
+        </button>
+        <button class="nav-btn" data-page="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          Alert
+        </button>
+      </nav>
+      <!-- <div class="sidebar-footer">
+        <span class="status-dot"></span>Live — Updated just now
+      </div> -->
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h1 id="pageTitle">Dashboard</h1>
+        <!-- <div class="topbar-right"> -->
+        <span id="currentDate" style="font-family:var(--mono);font-size:12px;color:var(--muted)"></span>
+        <!-- <div class="live-badge">
+            <span class="status-dot" style="margin:0"></span> Live
+          </div> -->
+        <!-- </div> -->
+      </header>
+
+      <section class="content">
+        <div class="controls">
+          <div class="segment">
+            <button data-period="overview">Overview</button>
+            <button class="active" data-period="monthly">Monthly</button>
+            <button data-period="daily">Daily</button>
+          </div>
+          <div class="selects" id="dateControls"></div>
+        </div>
+
+        <div class="chart-tooltip" id="chartTooltip"></div>
+
+        <!-- DASHBOARD -->
+        <div id="dashboardPage">
+          <div class="metrics" id="dashboardMetrics"></div>
+          <section class="card chart-card">
+            <div class="chart-head">
+              <h2>Energy Trend (kWh)</h2>
+              <!-- <div class="badge"> -->
+              <!-- <svg width="10" height="10" viewBox="0 0 10 10" fill="var(--teal)">
+                  <circle cx="5" cy="5" r="5" />
+                </svg> -->
+              <!-- Live data -->
+              <!-- </div> -->
+            </div>
+            <div class="chart-wrap" id="dashboardTrend"></div>
+          </section>
+          <div class="bottom-grid">
+            <section class="card mini-card">
+              <h2>Appliance Breakdown</h2>
+              <div class="appliance-wrap">
+                <div class="donut" aria-label="Appliance usage donut chart"></div>
+                <div class="appliance-list">
+                  <div class="appliance-row"><span class="dot" style="background:#2d7ff9"></span><span>Air
+                      Conditioner</span><strong>38%</strong></div>
+                  <div class="appliance-row"><span class="dot" style="background:#ff7a45"></span><span>Water
+                      Heater</span><strong>18%</strong></div>
+                  <div class="appliance-row"><span class="dot"
+                      style="background:#4f8fff"></span><span>Refrigerator</span><strong>14%</strong></div>
+                  <div class="appliance-row"><span class="dot"
+                      style="background:#ffb830"></span><span>Washer/Dryer</span><strong>12%</strong></div>
+                  <div class="appliance-row"><span class="dot"
+                      style="background:#c5c9d6"></span><span>Other</span><strong>18%</strong></div>
+                </div>
+              </div>
+            </section>
+            <section class="card mini-card">
+              <h2>Daily Usage Pattern</h2>
+              <div class="usage-strip" id="usageStrip"></div>
+              <div class="hours" id="usageHours"></div>
+              <div class="heat-legend">
+                <span>Low</span>
+                <span class="heat-swatch" style="background:#d6e8ff"></span>
+                <span class="heat-swatch" style="background:#5ca4f5"></span>
+                <span class="heat-swatch" style="background:#ffb830"></span>
+                <span class="heat-swatch" style="background:#ff4d6a"></span>
+                <span>High</span>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- FORECAST -->
+        <div id="forecastPage" class="hidden">
+          <div class="metrics four" id="forecastMetrics"></div>
+          <section class="card chart-card">
+            <div class="chart-head">
+              <h2>Actual vs Forecast (kWh)</h2>
+              <span class="badge">Accuracy 80%</span>
+            </div>
+            <div class="chart-wrap" id="forecastLine"></div>
+            <div class="legend"><span><i class="dot actual"></i>Actual</span><span><i
+                  class="dot forecast"></i>Forecast</span>
+            </div>
+          </section>
+          <section class="card chart-card">
+            <div class="chart-head">
+              <h2>Monthly Comparison (kWh)</h2>
+              <div class="legend" style="margin:0"><span><i class="dot forecast"></i>Forecast</span><span><i
+                    class="dot actual"></i>Actual</span></div>
+            </div>
+            <div class="chart-wrap" id="forecastBars"></div>
+          </section>
+        </div>
+
+        <!-- BILL -->
+        <div id="billPage" class="hidden">
+          <div class="metrics four" id="billMetrics"></div>
+          <div id="billOverview" class="bill-grid">
+            <section class="bill-panel">
+              <h2>Billing Details</h2>
+              <div class="bill-row"><span>0–150 kWh<small>3.2484 Baht/kWh</small></span><span class="bill-amount">487.26
+                  ฿</span></div>
+              <div class="bill-row"><span>151–400 kWh<small>4.2218 Baht/kWh</small></span><span
+                  class="bill-amount">1,055.45
+                  ฿</span></div>
+              <div class="bill-row"><span>&gt;400 kWh<small>4.4217 Baht/kWh</small></span><span
+                  class="bill-amount">4,071.31
+                  ฿</span></div>
+              <div class="bill-row"><span>Service Fee</span><span class="bill-amount">38.22 ฿</span></div>
+              <div class="bill-row"><span>FT Rate</span><span class="bill-amount">380.37 ฿</span></div>
+              <div class="bill-row"><span>VAT 7%</span><span class="bill-amount">407.59 ฿</span></div>
+              <div class="bill-row total"><span>Net Total</span><span class="bill-amount">6,240 ฿</span></div>
+            </section>
+            <section class="bill-panel">
+              <h2 style="padding:22px 24px 14px;border-bottom:1px solid var(--line2);">Usage Breakdown</h2>
+              <div class="bill-row"><span>Energy (kWh)</span><span class="bill-amount">1,842 kWh</span></div>
+              <div class="bill-row"><span>Avg. Daily Usage</span><span class="bill-amount">59.4 kWh</span></div>
+              <div class="bill-row"><span>Peak Day</span><span class="bill-amount">06 Aug</span></div>
+              <div class="bill-row"><span>Peak Hour</span><span class="bill-amount">21:00</span></div>
+              <div class="bill-row"><span>Power Factor</span><span class="bill-amount">0.96</span></div>
+              <div class="bill-row"><span>Avg. Voltage</span><span class="bill-amount">224 V</span></div>
+              <div class="bill-row" style="min-height:54px;"></div>
+            </section>
+          </div>
+          <section id="billYear" class="bill-panel hidden" style="margin-top:0;">
+            <div
+              style="padding:22px 24px 14px; border-bottom:1px solid var(--line2); display:flex; align-items:center; justify-content:space-between;">
+              <h2>Billing History</h2>
+              <span id="billHistoryBadge"
+                style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--sub);background:var(--line2);padding:4px 10px;border-radius:20px;">2020</span>
+            </div>
+            <div id="dailyBillBars" style="padding:0"></div>
+          </section>
+        </div>
+
+        <!-- ALERT -->
+        <div id="alertPage" class="hidden">
+          <div class="alert-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Topic</th>
+                  <th>Description</th>
+                  <th>Severity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>04 Aug 2026</td>
+                  <td>02:00</td>
+                  <td>Voltage Drop</td>
+                  <td>แรงดันไฟเฉลี่ยต่ำกว่า 200V</td>
+                  <td><span class="pill warning">⚠ Warning</span></td>
+                </tr>
+                <tr>
+                  <td>04 Aug 2026</td>
+                  <td>04:00</td>
+                  <td>Overload</td>
+                  <td>แอร์ใช้กระแสไฟเกิน</td>
+                  <td><span class="pill critical">✕ Critical</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const state = { page: "dashboard", period: "monthly" };
+    const pages = { dashboard: "Dashboard", forecast: "Energy Forecast", bill: "Bill Calculator", alert: "Alert" };
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const heat = ["#deeaff", "#deeaff", "#deeaff", "#deeaff", "#deeaff", "#deeaff", "#5ca4f5", "#ffb830", "#5ca4f5", "#5ca4f5", "#5ca4f5", "#ffb830", "#ff4d6a", "#ff4d6a", "#ff4d6a", "#ffb830", "#ffb830", "#5ca4f5", "#ffb830", "#ff4d6a", "#ffb830", "#ffb830", "#5ca4f5", "#5ca4f5"];
+    const dateState = { day: 4, month: 7, year: 2020 };
+    const daysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
+
+    // Date display
+    const dateEl = document.getElementById('currentDate');
+    if (dateEl) {
+      const now = new Date();
+      dateEl.textContent = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function trendIcon(down) {
+      const color = down ? '#ff4d6a' : '#00c48c';
+      const arrow = down ? '▼' : '▲';
+      return `<span style="color:${color}">${arrow}</span>`;
+    }
+
+    function metric({ title, value, unit, note, percent, down, status }) {
+      let footer = '';
+      if (status) {
+        const cls = status.type === 'peak' ? 'warn' : 'stable';
+        footer = `<div class="metric-footer ${cls}">${status.text}</div>`;
+      } else if (percent) {
+        footer = `<div class="metric-footer ${down ? 'down' : 'up'}">${trendIcon(down)} ${percent} ${note}</div>`;
+      }
+      return `<article class="metric">
+        <div class="metric-label">${title}</div>
+        <div class="metric-value"><span>${value}</span>${unit ? `<span class="metric-unit">${unit}</span>` : ''}</div>
+        ${footer}
+      </article>`;
+    }
+
+    function dateControls() {
+      const numDays = daysInMonth(dateState.month, dateState.year);
+      const dayPill = makePill('day', String(dateState.day).padStart(2, '0'), Array.from({ length: numDays }, (_, i) => ({ val: i + 1, label: String(i + 1).padStart(2, '0') })));
+      const monthPill = makePill('month', monthNames[dateState.month], monthNames.map((m, i) => ({ val: i, label: m })));
+      const years = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+      const yearPill = makePill('year', String(dateState.year), years.map(y => ({ val: y, label: String(y) })));
+      if (state.period === 'daily') return dayPill + monthPill + yearPill;
+      if (state.period === 'monthly') return monthPill + yearPill;
+      return yearPill;
+    }
+
+    function makePill(type, display, items) {
+      const cur = dateState[type];
+      const dropdown = items.map(it => `<div class="dropdown-item${it.val == cur ? ' active' : ''}" data-type="${type}" data-val="${it.val}">${it.label}</div>`).join('');
+      return `<span class="select-pill" data-picker="${type}">${display}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg><div class="dropdown">${dropdown}</div></span>`;
+    }
+
+    function setMetrics() {
+      const dash = {
+        overview: [
+          { title: "Total Energy (1 Year)", value: "9,536", unit: "kWh", note: "from last year", percent: "8.5%" },
+          { title: "Avg. Power", value: "0.27", unit: "kW", status: { text: "Stable" } },
+          { title: "Power Factor", value: "0.97", unit: "", status: { text: "Normal" } },
+          { title: "Avg. Voltage", value: "224", unit: "V", status: { text: "Normal" } },
+          { title: "Peak Power", value: "5.36", unit: "kW", status: { text: "06/05/22 21:00", type: "peak" } }
+        ],
+        monthly: [
+          { title: "Total Energy (Month)", value: "987", unit: "kWh", note: "from last month", percent: "8.5%" },
+          { title: "Avg. Power", value: "0.27", unit: "kW", status: { text: "Stable" } },
+          { title: "Power Factor", value: "0.96", unit: "", status: { text: "Normal" } },
+          { title: "Avg. Voltage", value: "224", unit: "V", status: { text: "Normal" } },
+          { title: "Peak Power", value: "5.36", unit: "kW", status: { text: "06/05/22 21:00", type: "peak" } }
+        ],
+        daily: [
+          { title: "Total Energy (Day)", value: "69", unit: "kWh", note: "from yesterday", percent: "8.5%" },
+          { title: "Avg. Power", value: "0.27", unit: "kW", status: { text: "Stable" } },
+          { title: "Power Factor", value: "0.96", unit: "", status: { text: "Normal" } },
+          { title: "Avg. Voltage", value: "224", unit: "V", status: { text: "Normal" } },
+          { title: "Peak Power", value: "5.36", unit: "kW", status: { text: "06/05/22 21:00", type: "peak" } }
+        ]
+      };
+      const forecast = [
+        { title: "August (Forecast)", value: "1,980", unit: "kWh", note: "Up from Jul", percent: "8.5%" },
+        { title: "September (Forecast)", value: "2,105", unit: "kWh", note: "Up from Aug", percent: "1.3%" },
+        { title: "October (Forecast)", value: "1,850", unit: "kWh", note: "Down from Sep", percent: "4.3%", down: true },
+        { title: "August Electricity", value: "6,820", unit: "฿", note: "Up from Jul", percent: "1.8%" }
+      ];
+      const bill = state.period === 'overview' ? [
+        { title: "Total", value: "100,320", unit: "฿", note: "Up from last year", percent: "8.5%" },
+        { title: "Highest Month", value: "5,614", unit: "฿", status: { text: "+ VAT 7%" } },
+        { title: "Lowest Month", value: "1,390", unit: "฿", status: { text: "+ VAT 7%" } },
+        { title: "Monthly Average", value: "6,240", unit: "฿", status: { text: "+ VAT 7%" } }
+      ] : [
+        { title: "August Usage", value: "1,842", unit: "kWh", note: "Up from Jul", percent: "8.5%" },
+        { title: "Energy Cost", value: "5,614", unit: "฿", status: { text: "Before FT & VAT" } },
+        { title: "FT Rate", value: "+380", unit: "฿", status: { text: "Fuel Tariff" } },
+        { title: "Net Total", value: "6,240", unit: "฿", status: { text: "+ VAT 7%" } }
+      ];
+
+      document.querySelector('#dashboardMetrics').innerHTML = dash[state.period].map(d => metric(d)).join('');
+      document.querySelector('#forecastMetrics').innerHTML = forecast.map(d => metric(d)).join('');
+      document.querySelector('#billMetrics').innerHTML = bill.map(d => metric(d)).join('');
+    }
+
+    // ─── SVG helpers ───
+    const C = {
+      teal: '#2d7ff9', orange: '#ff7a45', blue: '#4f8fff',
+      line: '#dde0eb', text: '#8a90a0', white: '#fff',
+      bg: '#ffffff', gridLine: 'rgba(0,0,0,0.05)'
+    };
+
+    function lineChart({ values, labels, max = 100, color = C.teal, fill = false, height = 300, yTicks = [0, 20, 40, 60, 80, 100] }) {
+      const w = 1200, h = height, left = 64, right = 20, top = 20, bottom = 40;
+      const cw = w - left - right, ch = h - top - bottom;
+      const pts = values.map((v, i) => [left + (cw * i) / (values.length - 1), top + ch - (v / max) * ch]);
+      const d = pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+      const area = `${d} L${pts[pts.length - 1][0]},${top + ch} L${pts[0][0]},${top + ch} Z`;
+      const gridY = yTicks.map(t => {
+        const y = top + ch - (t / max) * ch;
+        return `<line x1="${left}" x2="${w - right}" y1="${y}" y2="${y}" stroke="${C.gridLine}"/>
+                <text x="${left - 10}" y="${y + 4}" text-anchor="end" fill="${C.text}" font-size="12" font-family="Space Mono">${t}</text>`;
+      }).join('');
+      const gridX = labels.map((lab, i) => {
+        const x = left + (cw * i) / (labels.length - 1);
+        return `<text x="${x}" y="${top + ch + 24}" text-anchor="middle" fill="${C.text}" font-size="12">${lab}</text>`;
+      }).join('');
+      const uid = `lc${Math.random().toString(36).slice(2, 6)}`;
+      return `<svg class="chart" viewBox="0 0 ${w} ${h}">
+        <defs>
+          <linearGradient id="${uid}" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="${color}" stop-opacity=".3"/>
+            <stop offset="1" stop-color="${color}" stop-opacity="0"/>
+          </linearGradient>
+          <filter id="${uid}glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect width="${w}" height="${h}" fill="transparent"/>
+        ${gridY}${gridX}
+        <line x1="${left}" x2="${w - right}" y1="${top + ch}" y2="${top + ch}" stroke="${C.line}"/>
+        ${fill ? `<path d="${area}" fill="url(#${uid})"/>` : ''}
+        <path d="${d}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#${uid}glow)"/>
+        ${pts.map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="4" fill="${color}" stroke="${C.bg}" stroke-width="2"><title>${labels[i]}: ${values[i]}</title></circle>`).join('')}
+      </svg>`;
+    }
+
+    function forecastLineChart() {
+      const w = 1200, h = 300, left = 64, right = 30, top = 16, bottom = 40, max = 100;
+      const actual = [30, 33, 36, 38, 44, 50, 60];
+      const forecast = [60, 66, 72, 78, 70, 60];
+      const bandHi = [60, 68, 74, 83, 74, 66];
+      const bandLo = [60, 64, 68, 72, 62, 52];
+      const cw = w - left - right, ch = h - top - bottom;
+      const x = i => left + (cw * i) / 11;
+      const y = v => top + ch - (v / max) * ch;
+      const apt = actual.map((v, i) => [x(i), y(v)]);
+      const fpt = forecast.map((v, i) => [x(i + 6), y(v)]);
+      const hiPt = bandHi.map((v, i) => [x(i + 6), y(v)]);
+      const loPt = bandLo.map((v, i) => [x(i + 6), y(v)]).reverse();
+      const d = pts => pts.map((p, i) => `${i ? 'L' : 'M'}${p[0]},${p[1]}`).join(' ');
+      const band = `${d(hiPt)} ${loPt.map(p => `L${p[0]},${p[1]}`).join(' ')} Z`;
+      const gridY = [20, 40, 60, 80, 100].map(t => `<text x="${left - 10}" y="${y(t) + 4}" text-anchor="end" fill="${C.text}" font-size="12" font-family="Space Mono">${t}</text>`).join('');
+      const xLab = monthNames.map((lab, i) => `<text x="${x(i)}" y="${top + ch + 28}" text-anchor="middle" fill="${C.text}" font-size="12">${lab}</text>`).join('');
+      return `<svg class="chart" viewBox="0 0 ${w} ${h}">
+        <defs>
+          <linearGradient id="bandFill" x1="0" x2="1"><stop stop-color="${C.orange}" stop-opacity=".15"/><stop offset="1" stop-color="${C.orange}" stop-opacity=".05"/></linearGradient>
+          <filter id="cGlow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        ${gridY}${xLab}
+        <path d="${band}" fill="url(#bandFill)"/>
+        <path d="${d(apt)}" fill="none" stroke="${C.teal}" stroke-width="2.5" stroke-linecap="round" filter="url(#cGlow)"/>
+        <path d="${d(fpt)}" fill="none" stroke="${C.orange}" stroke-width="2.5" stroke-dasharray="8 5" stroke-linecap="round"/>
+        <line x1="${x(6)}" x2="${x(6)}" y1="${top + 16}" y2="${top + ch - 10}" stroke="#ffb830" stroke-width="1.5" stroke-dasharray="5 4" opacity=".7"/>
+        <text x="${x(6) + 6}" y="${top + 30}" fill="#ffb830" font-size="12" font-weight="700" font-family="Space Mono">NOW →</text>
+      </svg>`;
+    }
+
+    function groupedBars() {
+      const w = 1100, h = 260, left = 100, right = 20, top = 24, bottom = 42, max = 2500;
+      const labels = ["Jul", "Aug", "Sep"];
+      const forecast = [1980, 2105, 1850];
+      const actual = [1800, 1900, 2000];
+      const cw = w - left - right, ch = h - top - bottom;
+      const grid = [0, 500, 1000, 1500, 2000, 2500].map(v => {
+        const y = top + ch - (v / max) * ch;
+        return `<line x1="${left}" x2="${w - right}" y1="${y}" y2="${y}" stroke="${C.gridLine}"/>
+                <text x="${left - 10}" y="${y + 5}" text-anchor="end" fill="${C.text}" font-size="12" font-family="Space Mono">${v.toLocaleString()}</text>`;
+      }).join('');
+      const bars = labels.map((lab, i) => {
+        const gx = left + (cw / 3) * i + 24, bw = 120, gap = 10;
+        const fy = top + ch - (forecast[i] / max) * ch, ay = top + ch - (actual[i] / max) * ch;
+        return `<g>
+          <text x="${gx + bw / 2}" y="${fy - 7}" text-anchor="middle" fill="${C.text}" font-size="12" font-family="Space Mono">${forecast[i].toLocaleString()}</text>
+          <text x="${gx + bw + gap + bw / 2}" y="${ay - 7}" text-anchor="middle" fill="${C.text}" font-size="12" font-family="Space Mono">${actual[i].toLocaleString()}</text>
+          <rect x="${gx}" y="${fy}" width="${bw}" height="${top + ch - fy}" rx="10" fill="${C.orange}" opacity=".85" data-value="${forecast[i]} kWh (Forecast)"/>
+          <rect x="${gx + bw + gap}" y="${ay}" width="${bw}" height="${top + ch - ay}" rx="10" fill="${C.teal}" opacity=".85" data-value="${actual[i]} kWh (Actual)"/>
+          <text x="${gx + bw + gap / 2}" y="${top + ch + 28}" text-anchor="middle" fill="${C.text}" font-size="14" font-weight="600">${lab}</text>
+        </g>`;
+      }).join('');
+      return `<svg class="chart" viewBox="0 0 ${w} ${h}">${grid}${bars}</svg>`;
+    }
+
+    function horizontalBars() {
+      const bills = [4820, 5310, 4590, 5640, 6120, 7240, 6890, 6240, 5760, 6430, 5980, 5120];
+      const activeMonth = dateState.month;
+      const maxVal = Math.max(...bills);
+      const avg = Math.round(bills.reduce((a, b) => a + b, 0) / bills.length);
+
+      // Sparkline trend path
+      const sw = 120, sh = 28, spad = 6;
+      const spts = bills.map((v, i) => {
+        const x = spad + (sw - spad * 2) * i / (bills.length - 1);
+        const y = spad + (sh - spad * 2) * (1 - (v - Math.min(...bills)) / (maxVal - Math.min(...bills)));
+        return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(' ');
+
+      const rows = bills.map((v, i) => {
+        const pct = v / maxVal;
+        const isActive = i === activeMonth;
+        const isHigh = v === maxVal;
+        const barColor = isActive ? C.teal : isHigh ? '#f87171' : '#93c5fd';
+        const barAlpha = isActive ? '1' : isHigh ? '0.85' : '0.6';
+        const textColor = isActive ? C.teal : isHigh ? '#dc2626' : 'var(--sub)';
+        const bgColor = isActive ? 'rgba(59,130,246,0.04)' : 'transparent';
+        const pctOfAvg = Math.round((v / avg - 1) * 100);
+        const trend = pctOfAvg >= 0 ? `+${pctOfAvg}%` : `${pctOfAvg}%`;
+        const trendColor = pctOfAvg > 10 ? '#dc2626' : pctOfAvg < -5 ? '#16a34a' : 'var(--muted)';
+
+        return `
+          <div style="display:grid;grid-template-columns:38px 1fr 80px 70px;align-items:center;gap:10px;
+                      padding:7px 20px 7px 16px;background:${bgColor};
+                      border-left:3px solid ${isActive ? C.teal : 'transparent'};
+                      transition:background .15s;"
+               onmouseover="this.style.background='rgba(59,130,246,0.04)'"
+               onmouseout="this.style.background='${bgColor}'">
+            <span style="font-family:var(--mono);font-size:11px;font-weight:700;color:${textColor};text-align:right;">${monthNames[i]}</span>
+            <div style="position:relative;height:10px;background:var(--line2);border-radius:99px;overflow:hidden;">
+              <div style="position:absolute;left:0;top:0;height:100%;width:${(pct * 100).toFixed(1)}%;
+                          background:${barColor};opacity:${barAlpha};border-radius:99px;
+                          transition:width .4s cubic-bezier(.4,0,.2,1);"></div>
+            </div>
+            <span style="font-family:var(--mono);font-size:12px;font-weight:700;color:${textColor};text-align:right;white-space:nowrap;">${v.toLocaleString()} ฿</span>
+            <span style="font-size:11px;font-weight:700;color:${trendColor};text-align:right;">${trend}</span>
+          </div>`;
+      }).join('');
+
+      // avg line marker for SVG sparkline
+      const avgY = spad + (sh - spad * 2) * (1 - (avg - Math.min(...bills)) / (maxVal - Math.min(...bills)));
+
+      const header = `
+        <div style="display:grid;grid-template-columns:38px 1fr 80px 70px;align-items:center;gap:10px;
+                    padding:6px 20px 10px 16px;border-bottom:1px solid var(--line2);margin-bottom:4px;">
+          <span></span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg viewBox="0 0 ${sw} ${sh}" style="width:${sw}px;height:${sh}px;flex-shrink:0;">
+              <line x1="${spad}" x2="${sw - spad}" y1="${avgY.toFixed(1)}" y2="${avgY.toFixed(1)}" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3 2"/>
+              <path d="${spts}" fill="none" stroke="${C.teal}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="${spad + (sw - spad * 2) * activeMonth / (bills.length - 1)}" cy="${(spad + (sh - spad * 2) * (1 - (bills[activeMonth] - Math.min(...bills)) / (maxVal - Math.min(...bills)))).toFixed(1)}" r="3" fill="${C.teal}" stroke="#fff" stroke-width="1.5"/>
+            </svg>
+            <span style="font-size:10px;color:var(--muted);font-weight:600;">12-month trend</span>
+          </div>
+          <span style="font-family:var(--mono);font-size:10px;color:var(--muted);text-align:right;">Amount</span>
+          <span style="font-size:10px;color:var(--muted);text-align:right;">vs avg</span>
+        </div>`;
+
+      const footer = `
+        <div style="padding:10px 20px 14px 16px;border-top:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+          <span style="font-size:11px;color:var(--muted);font-weight:600;">Monthly avg</span>
+          <span style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink);">${avg.toLocaleString()} ฿</span>
+        </div>`;
+
+      document.getElementById('dailyBillBars').innerHTML = header + rows + footer;
+      return '';
+    }
+
+    function yearlyBars() {
+      const values = [71000, 69000, 70500, 71500, 65500, 70000, 68000, 72000, 69000, 71000, 70500, 59000];
+      return verticalBars({ values, labels: monthNames, max: 80000, ticks: [0, 20000, 40000, 60000, 80000], color: C.teal, height: 300 });
+    }
+
+    function verticalBars({ values, labels, max, ticks, color, height = 300 }) {
+      const w = 1100, h = height, left = 80, right = 24, top = 18, bottom = 42, cw = w - left - right, ch = h - top - bottom;
+      const bw = Math.min(56, cw / values.length * .7);
+      const grid = ticks.map(v => {
+        const y = top + ch - (v / max) * ch;
+        return `<line x1="${left}" x2="${w - right}" y1="${y}" y2="${y}" stroke="${C.gridLine}"/>
+                <text x="${left - 10}" y="${y + 5}" text-anchor="end" fill="${C.text}" font-size="12" font-family="Space Mono">${v.toLocaleString()}</text>`;
+      }).join('');
+      const bars = values.map((v, i) => {
+        const x = left + (cw / values.length) * i + (cw / values.length - bw) / 2, y = top + ch - (v / max) * ch;
+        return `<rect x="${x}" y="${y}" width="${bw}" height="${top + ch - y}" rx="6" fill="${color}" opacity=".8" data-value="${labels[i]}: ${v.toLocaleString()}"/>
+                <text x="${x + bw / 2}" y="${top + ch + 24}" text-anchor="middle" fill="${C.text}" font-size="12">${labels[i]}</text>`;
+      }).join('');
+      return `<svg class="chart" viewBox="0 0 ${w} ${h}">${grid}${bars}</svg>`;
+    }
+
+    function renderCharts() {
+      const dashValues = state.period === 'daily'
+        ? [4.4, 4.9, 6.9, 9.9, 9.4, 5.8, 3, 6.8, 6.7, 1.8, 5.8, 3.5, 3, 5.1, 8, 7, 9, 2, 6, 4, 5.1, 7, 9, 7]
+        : state.period === 'overview'
+          ? [780, 820, 780, 785, 760, 815, 825, 780, 770, 900, 780, 760]
+          : [14, 65, 57, 70, 89, 26, 33, 62, 61, 72, 66, 31, 39, 35, 38, 27, 90, 92, 60, 45, 56, 78, 69, 72, 54, 39, 57, 61, 68, 78];
+      const dashLabels = state.period === 'daily'
+        ? Array.from({ length: 24 }, (_, i) => String(i + 1))
+        : state.period === 'overview'
+          ? monthNames
+          : Array.from({ length: 30 }, (_, i) => String(i + 1));
+      const dashMax = state.period === 'overview' ? 900 : state.period === 'daily' ? 10 : 100;
+      const ticks = state.period === 'overview' ? [0, 150, 300, 450, 600, 750, 900] : state.period === 'daily' ? [0, 2, 4, 6, 8, 10] : [0, 20, 40, 60, 80, 100];
+      document.querySelector('#dashboardTrend').innerHTML = lineChart({ values: dashValues, labels: dashLabels, max: dashMax, yTicks: ticks, fill: true, height: 300 });
+      document.querySelector('#forecastLine').innerHTML = forecastLineChart();
+      document.querySelector('#forecastBars').innerHTML = groupedBars();
+      horizontalBars();
+      document.querySelector('#yearBillBars').innerHTML = yearlyBars();
+    }
+
+    function renderHeat() {
+      document.querySelector('#usageStrip').innerHTML = heat.map(c => `<span class="usage-cell" style="--heat:${c}"></span>`).join('');
+      document.querySelector('#usageHours').innerHTML = Array.from({ length: 24 }, (_, i) => `<span>${String(i).padStart(2, '0')}</span>`).join('');
+    }
+
+    function updateVisibility() {
+      for (const key of Object.keys(pages)) {
+        document.querySelector(`#${key}Page`).classList.toggle('hidden', state.page !== key);
+      }
+      document.querySelector('#pageTitle').textContent = pages[state.page];
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.page === state.page));
+      document.querySelectorAll('.segment button').forEach(b => b.classList.toggle('active', b.dataset.period === state.period));
+      document.querySelector('#dateControls').innerHTML = dateControls();
+      document.querySelector('#billOverview').classList.toggle('hidden', state.page === 'bill' && state.period === 'overview');
+      document.querySelector('#billYear').classList.toggle('hidden', !(state.page === 'bill' && state.period === 'overview'));
+      setMetrics();
+      renderCharts();
+    }
+
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => { state.page = btn.dataset.page; updateVisibility(); });
+    });
+
+    document.querySelectorAll('.segment button').forEach(btn => {
+      btn.addEventListener('click', () => { state.period = btn.dataset.period; updateVisibility(); });
+    });
+
+    document.addEventListener('click', e => {
+      const pill = e.target.closest('.select-pill');
+      document.querySelectorAll('.select-pill.open').forEach(p => { if (p !== pill) p.classList.remove('open'); });
+      if (pill) { pill.classList.toggle('open'); e.stopPropagation(); }
+      const item = e.target.closest('.dropdown-item');
+      if (item) {
+        const type = item.dataset.type;
+        const val = parseInt(item.dataset.val);
+        dateState[type] = val;
+        if (type === 'month' || type === 'year') {
+          const maxDay = daysInMonth(dateState.month, dateState.year);
+          if (dateState.day > maxDay) dateState.day = maxDay;
+        }
+        document.querySelectorAll('.select-pill.open').forEach(p => p.classList.remove('open'));
+        updateVisibility();
+      }
+    });
+
+    const tooltip = document.getElementById('chartTooltip');
+    document.addEventListener('mouseover', e => {
+      const circle = e.target.closest('circle');
+      const rect = e.target.closest('rect[rx]');
+      if (circle?.querySelector('title')) {
+        tooltip.textContent = circle.querySelector('title').textContent;
+        tooltip.style.display = 'block';
+      } else if (rect?.dataset.value) {
+        tooltip.textContent = rect.dataset.value;
+        tooltip.style.display = 'block';
+      }
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (tooltip.style.display === 'block') {
+        tooltip.style.left = (e.clientX + 14) + 'px';
+        tooltip.style.top = (e.clientY - 34) + 'px';
+      }
+    });
+
+    document.addEventListener('mouseout', e => {
+      if (e.target.closest('circle') || e.target.closest('rect[rx]')) tooltip.style.display = 'none';
+    });
+
+    renderHeat();
+    updateVisibility();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,676 @@
+/* ============ LAYOUT ============ */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  background: #F5F6FA;
+  overflow-y: auto;
+  margin-left: 240px;
+}
+
+/* ============ SIDEBAR ============ */
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #E0E0E0;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.sidebar-logo {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  color: #4880FF;
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+.logo-highlight {
+  color: #202224;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.sidebar-section-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #202224;
+  opacity: 0.6;
+  padding: 20px 40px 8px;
+  letter-spacing: 0.3px;
+  border-top: 1px solid #E0E0E0;
+  margin-top: 4px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px 14px 46px;
+  text-decoration: none;
+  color: #202224;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Nunito Sans', sans-serif;
+  letter-spacing: 0.3px;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.sidebar-item:hover {
+  background: #f0f4ff;
+}
+
+.sidebar-item-active {
+  color: #fff !important;
+}
+
+.sidebar-item-active::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 0;
+  width: 9px;
+  height: 100%;
+  background: #4880FF;
+  border-radius: 4px;
+}
+
+.sidebar-item-active::after {
+  content: '';
+  position: absolute;
+  left: 24px;
+  top: 0;
+  right: 0;
+  width: calc(100% - 48px);
+  height: 100%;
+  background: #4880FF;
+  border-radius: 6px;
+  z-index: -1;
+}
+
+.sidebar-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.sidebar-label {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============ TOPBAR ============ */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 30px;
+  background: #fff;
+  border-bottom: 1px solid #E0E0E0;
+  min-height: 70px;
+}
+
+.topbar-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #202224;
+  font-family: 'Nunito Sans', sans-serif;
+  letter-spacing: -0.13px;
+}
+
+.topbar-actions {
+  position: relative;
+}
+
+.date-range-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  border: 0.6px solid #D5D5D5;
+  border-radius: 14px;
+  background: #F9F9FB;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Nunito Sans', sans-serif;
+  color: #202224;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.date-range-btn:hover {
+  border-color: #4880FF;
+  box-shadow: 0 2px 8px rgba(72, 128, 255, 0.12);
+}
+
+.date-picker-dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  z-index: 100;
+}
+
+/* ============ CALENDAR ============ */
+.calendar-popup {
+  background: #fff;
+  border: 1px solid #E0E0E0;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  width: 280px;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.calendar-month-year {
+  font-size: 15px;
+  font-weight: 700;
+  color: #202224;
+}
+
+.calendar-nav {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #4880FF;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.calendar-nav:hover {
+  background: #f0f4ff;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
+}
+
+.calendar-day-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #888;
+  padding: 6px 0;
+}
+
+.calendar-day {
+  font-size: 13px;
+  padding: 6px;
+  border-radius: 6px;
+  color: #666;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-day-valid {
+  cursor: pointer;
+  color: #202224;
+  transition: background 0.15s;
+}
+
+.calendar-day-valid:hover {
+  background: #f0f4ff;
+}
+
+.calendar-day-today {
+  background: #4880FF !important;
+  color: #fff !important;
+  font-weight: 700;
+}
+
+/* ============ TAB BAR ============ */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 20px;
+  border: 1px solid #D5D5D5;
+  border-radius: 10px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.tab-btn {
+  padding: 10px 28px;
+  border: none;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Nunito Sans', sans-serif;
+  color: #202224;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-right: 1px solid #D5D5D5;
+}
+
+.tab-btn:last-child {
+  border-right: none;
+}
+
+.tab-btn:hover {
+  background: #f0f4ff;
+}
+
+.tab-btn-active {
+  background: #4880FF;
+  color: #fff;
+}
+
+.tab-btn-active:hover {
+  background: #3a6fe0;
+}
+
+/* ============ PAGE CONTENT ============ */
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-content {
+  padding: 24px 30px;
+  flex: 1;
+}
+
+/* ============ STAT CARDS ============ */
+.stat-cards-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: #fff;
+  border: 0.6px solid #D5D5D5;
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.stat-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: #202224;
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+.stat-unit {
+  font-size: 14px;
+  font-weight: 600;
+  color: #888;
+}
+
+.stat-change {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.stat-status {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.stat-sub {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* ============ CHART CARDS ============ */
+.chart-card {
+  background: #fff;
+  border: 0.6px solid #D5D5D5;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.chart-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #202224;
+  margin-bottom: 16px;
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+
+.chart-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.accuracy-badge {
+  background: #00B69B;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 8px;
+}
+
+/* ============ BOTTOM ROW ============ */
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.bottom-card {
+  margin-bottom: 0;
+}
+
+/* ============ CIRCUIT BREAKDOWN ============ */
+.circuit-content {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.doughnut-wrapper {
+  width: 180px;
+  height: 180px;
+  flex-shrink: 0;
+}
+
+.circuit-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  color: #555;
+  min-width: 110px;
+}
+
+.legend-value {
+  color: #202224;
+  font-weight: 700;
+}
+
+/* ============ HEATMAP ============ */
+.heatmap-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.heatmap-hours {
+  display: flex;
+  gap: 2px;
+  padding-left: 0;
+}
+
+.heatmap-hour-label {
+  font-size: 10px;
+  color: #888;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.heatmap-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.heatmap-row {
+  display: flex;
+  gap: 3px;
+}
+
+.heatmap-cell {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  transition: transform 0.1s;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #666;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.heatmap-legend-cell {
+  width: 20px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+/* ============ ALERT TABLE ============ */
+.alert-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+.alert-table thead {
+  background: #FCFDFD;
+  border: 0.6px solid #D5D5D5;
+  border-radius: 14px;
+}
+
+.alert-table th {
+  text-align: left;
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #202224;
+  opacity: 0.9;
+  letter-spacing: 0.3px;
+}
+
+.alert-table td {
+  padding: 18px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #202224;
+  opacity: 0.9;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.severity-badge {
+  display: inline-block;
+  padding: 4px 16px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ============ BILLING DETAILS ============ */
+.billing-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.billing-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.billing-row:last-child {
+  border-bottom: none;
+}
+
+.billing-tier {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.billing-tier-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #202224;
+}
+
+.billing-rate {
+  font-size: 12px;
+  color: #888;
+}
+
+.billing-amount {
+  font-size: 14px;
+  font-weight: 600;
+  color: #202224;
+  text-align: right;
+}
+
+.billing-total {
+  margin-top: 4px;
+  padding-top: 14px;
+  border-top: 2px solid #E0E0E0;
+}
+
+.billing-net-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #4880FF;
+}
+
+.billing-net-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #4880FF;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .stat-cards-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bottom-row {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar-title {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    position: relative;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 8px;
+    gap: 4px;
+  }
+
+  .sidebar-section-label {
+    display: none;
+  }
+
+  .sidebar-item {
+    padding: 10px 16px;
+  }
+
+  .stat-cards-row {
+    grid-template-columns: 1fr;
+  }
+
+  .circuit-content {
+    flex-direction: column;
+  }
+}

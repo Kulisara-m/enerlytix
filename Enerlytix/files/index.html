@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Enerlytix Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="app">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <div><span class="accent">Ener</span>lytix</div>
+        <div class="brand-sub">Energy Analysis</div>
+      </div>
+      <nav class="nav">
+        <div class="nav-section">OVERVIEW</div>
+        <button class="nav-btn active" data-page="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </button>
+        <div class="nav-section">Analysis</div>
+        <button class="nav-btn" data-page="forecast">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+          Energy Forecast
+        </button>
+        <button class="nav-btn" data-page="bill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2" />
+            <line x1="2" y1="10" x2="22" y2="10" />
+          </svg>
+          Bill Calculator
+        </button>
+        <button class="nav-btn" data-page="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          Alert
+        </button>
+      </nav>
+      <!-- <div class="sidebar-footer">
+        <span class="status-dot"></span>Live — Updated just now
+      </div> -->
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h1 id="pageTitle">Dashboard</h1>
+        <!-- <div class="topbar-right"> -->
+        <span id="currentDate" style="font-family:var(--mono);font-size:12px;color:var(--muted)"></span>
+        <!-- <div class="live-badge">
+            <span class="status-dot" style="margin:0"></span> Live
+          </div> -->
+        <!-- </div> -->
+      </header>
+
+      <section class="content">
+        <div class="controls">
+          <div class="segment">
+            <button data-period="overview">Year</button>
+            <button class="active" data-period="monthly">Month</button>
+            <button data-period="daily">Day</button>
+          </div>
+          <div class="selects" id="dateControls"></div>
+        </div>
+
+        <div class="chart-tooltip" id="chartTooltip"></div>
+
+        <!-- DASHBOARD -->
+        <div id="dashboardPage">
+          <div class="metrics" id="dashboardMetrics"></div>
+          <section class="card chart-card">
+            <div class="chart-head">
+              <h2>Energy Trend (kWh)</h2>
+              <button id="scaleModeBtn" onclick="chartState.scaleMode = chartState.scaleMode === 'auto' ? 'fixed' : 'auto'; renderCharts();"
+                style="height:32px;padding:0 14px;border-radius:20px;border:1px solid rgba(29,111,232,.25);background:rgba(29,111,232,.1);color:#1d6fe8;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .15s;">⇅ Auto Scale</button>
+            </div>
+            <div class="chart-wrap" id="dashboardTrend"></div>
+          </section>
+          <div class="bottom-grid">
+            <section class="card mini-card">
+              <h2>Appliance Breakdown</h2>
+              <div class="appliance-wrap">
+                <div class="donut" aria-label="Appliance usage donut chart"></div>
+                <div class="appliance-list">
+                  <div class="appliance-row"><span class="dot" style="background:#2d7ff9"></span><span>Air
+                      Conditioner</span><strong>38%</strong></div>
+                  <div class="appliance-row"><span class="dot" style="background:#ff7a45"></span><span>Water
+                      Heater</span><strong>18%</strong></div>
+                  <div class="appliance-row"><span class="dot"
+                      style="background:#4f8fff"></span><span>Refrigerator</span><strong>14%</strong></div>
+                  <div class="appliance-row"><span class="dot"
+                      style="background:#ffb830"></span><span>Washer/Dryer</span><strong>12%</strong></div>
+                  <div class="appliance-row"><span class="dot"
+                      style="background:#c5c9d6"></span><span>Other</span><strong>18%</strong></div>
+                </div>
+              </div>
+            </section>
+            <section class="card mini-card">
+              <h2>Daily Usage Pattern</h2>
+              <div class="usage-strip" id="usageStrip"></div>
+              <div class="hours" id="usageHours"></div>
+              <div class="heat-legend">
+                <span>Low</span>
+                <span class="heat-swatch" style="background:#d6e8ff"></span>
+                <span class="heat-swatch" style="background:#5ca4f5"></span>
+                <span class="heat-swatch" style="background:#ffb830"></span>
+                <span class="heat-swatch" style="background:#ff4d6a"></span>
+                <span>High</span>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- FORECAST -->
+        <div id="forecastPage" class="hidden">
+          <div class="metrics four" id="forecastMetrics"></div>
+          <section class="card chart-card">
+            <div class="chart-head">
+              <h2>Actual vs Forecast (kWh)</h2>
+              <span class="badge" id="forecastAccuracy">Accuracy 80%</span>
+            </div>
+            <div class="chart-wrap" id="forecastLine"></div>
+            <div class="legend"><span><i class="dot actual"></i>Actual</span><span><i
+                  class="dot forecast"></i>Forecast</span>
+            </div>
+          </section>
+          <section class="card chart-card">
+            <div class="chart-head">
+              <h2>Monthly Comparison (kWh)</h2>
+              <div class="legend" style="margin:0"><span><i class="dot forecast"></i>Forecast</span><span><i
+                    class="dot actual"></i>Actual</span></div>
+            </div>
+            <div class="chart-wrap" id="forecastBars"></div>
+          </section>
+        </div>
+
+        <!-- BILL -->
+        <div id="billPage" class="hidden">
+          <div class="metrics four" id="billMetrics"></div>
+          <div id="billOverview" class="bill-grid" style="margin-bottom:16px;">
+            <section class="bill-panel">
+              <h2>Billing Details</h2>
+              <div id="billingDetailsRows"></div>
+            </section>
+            <section class="bill-panel">
+              <h2 style="padding:22px 24px 14px;border-bottom:1px solid var(--line2);">Usage Breakdown</h2>
+              <div id="billingUsageRows"></div>
+            </section>
+          </div>
+          <section id="billYear" class="bill-panel hidden" style="margin-top:0;overflow:hidden;">
+            <div
+              style="padding:22px 24px 14px; border-bottom:1px solid var(--line2); display:flex; align-items:center; justify-content:space-between;">
+              <h2 style="text-decoration:none;border:none;">Billing History</h2>
+              <span id="billHistoryBadge"
+                style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--sub);background:var(--line2);padding:4px 10px;border-radius:20px;">2020</span>
+            </div>
+            <div id="dailyBillBars" style="padding:0;overflow:hidden;"></div>
+          </section>
+        </div>
+
+        <!-- ALERT -->
+        <div id="alertPage" class="hidden">
+          <div class="alert-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Topic</th>
+                  <th>Description</th>
+                  <th>Severity</th>
+                </tr>
+              </thead>
+              <tbody id="alertRows">
+                <tr>
+                  <td>04 Aug 2026</td>
+                  <td>02:00</td>
+                  <td>Voltage Drop</td>
+                  <td>แรงดันไฟเฉลี่ยต่ำกว่า 200V</td>
+                  <td><span class="pill warning">⚠ Warning</span></td>
+                </tr>
+                <tr>
+                  <td>04 Aug 2026</td>
+                  <td>04:00</td>
+                  <td>Overload</td>
+                  <td>แอร์ใช้กระแสไฟเกิน</td>
+                  <td><span class="pill critical">✕ Critical</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

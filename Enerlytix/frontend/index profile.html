@@ -1,0 +1,3749 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <title>Enerlytix Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /*กำหนด Theme ทั้งหมดของเว็บ*/
+    :root {
+      --teal: #3b82f6;
+      --teal2: #2563eb;
+      --blue: #4f8fff;
+      --orange: #ff7a45;
+      --amber: #ffb830;
+      --red: #ff4d6a;
+      --green: #00c48c;
+      --purple: #9b8fff;
+
+      --ink: #0f1117;
+      --ink2: #f5f6fa;
+      --ink3: #eceef4;
+      --muted: #8a90a0;
+      --sub: #6b7180;
+      --line: #dde0eb;
+      --line2: #eceef4;
+      --panel: #ffffff;
+      --bg: #f0f2f8;
+      --glow: rgba(59, 130, 246, .12);
+
+      --r: 14px;
+      --side: 240px;
+      --font: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+      --mono: "Space Mono", monospace;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      max-width: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: #2d3142;
+      font-family: var(--font);
+      line-height: 1.4;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    select {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--ink);
+      border-radius: 4px;
+    }
+
+    /* ─── LAYOUT ─── */
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: var(--side) 1fr;
+    }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: var(--panel);
+      border-right: 1px solid var(--line2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    .brand {
+      padding: 28px 24px 20px;
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+      border-bottom: 1px solid var(--line2);
+    }
+
+    .brand .accent {
+      color: #1d6fe8;
+    }
+
+    .brand-sub {
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .nav {
+      flex: 1;
+      padding: 18px 14px;
+      overflow-y: auto;
+    }
+
+    .nav-section {
+      padding: 16px 12px 6px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .nav-btn {
+      width: 100%;
+      height: 42px;
+      padding: 0 14px;
+      margin-bottom: 4px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--sub);
+      font-size: 14px;
+      font-weight: 500;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav-btn:hover {
+      background: var(--line2);
+      color: var(--ink);
+    }
+
+    .nav-btn.active {
+      background: rgba(59, 130, 246, .1);
+      color: #1d6fe8;
+      font-weight: 700;
+    }
+
+    .nav-btn svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      opacity: 0.8;
+    }
+
+    .nav-btn.active svg {
+      opacity: 1;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--line2);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-right: 6px;
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    /* ─── MAIN ─── */
+    .main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line2);
+      position: sticky;
+      top: 0;
+      z-index: 8;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: var(--sub);
+      font-size: 13px;
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(0, 196, 140, .08);
+      border: 1px solid rgba(0, 196, 140, .2);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* ─── CONTENT ─── */
+    .content {
+      padding: 20px 28px 40px;
+      flex: 1;
+    }
+
+    /* ─── CONTROLS ─── */
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    /* ปุ่ม Year/Month/Day */
+    .segment {
+      display: flex;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      height: 40px;
+    }
+
+    .segment button {
+      min-width: 90px;
+      border: 0;
+      background: transparent;
+      color: var(--sub);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 0 16px;
+      transition: background 0.15s, color 0.15s;
+      border-right: 1px solid var(--line);
+    }
+
+    .segment button:last-child {
+      border-right: 0;
+    }
+
+    .segment button.active {
+      background: #1d6fe8;
+      color: #fff;
+    }
+
+    .segment button:not(.active):hover {
+      background: var(--line2);
+      color: var(--ink);
+    }
+
+    .selects {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .select-pill {
+      height: 40px;
+      min-width: 80px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+      position: relative;
+      user-select: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    .select-pill:hover {
+      border-color: var(--teal);
+    }
+
+    .select-pill.open {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, .15);
+    }
+
+    .select-pill svg {
+      width: 14px;
+      height: 14px;
+      transition: transform .2s;
+      opacity: 0.7;
+    }
+
+    .select-pill.open svg {
+      transform: rotate(180deg);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 100%;
+      max-height: 200px;
+      overflow-y: auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, .12);
+      z-index: 100;
+      padding: 5px 0;
+      display: none;
+    }
+
+    .select-pill.open .dropdown {
+      display: block;
+    }
+
+    .dropdown-item {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      color: var(--sub);
+      transition: background .1s, color .1s;
+    }
+
+    .dropdown-item:hover {
+      background: var(--line2);
+      color: var(--ink);
+    }
+
+    .dropdown-item.active {
+      color: var(--teal);
+    }
+
+    /* ─── METRICS ─── */
+    .metrics {
+      display: grid;
+      /* 🌟 เปลี่ยนจากระบุเลข 5 เป็น auto-fit และกำหนดขนาดขั้นต่ำของกล่อง (เช่น 220px) */
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line2);
+      border-radius: var(--r);
+      padding: 18px 18px 16px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .metric::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #1d6fe8, transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .metric:hover {
+      border-color: #aac4f0;
+    }
+
+    .metric:hover::before {
+      opacity: 1;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .metric-value {
+      font-family: var(--mono);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+      letter-spacing: -1px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .metric-unit {
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--sub);
+      letter-spacing: 0;
+    }
+
+    .metric-footer {
+      margin-top: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .metric-footer.up {
+      color: var(--green);
+    }
+
+    .metric-footer.down {
+      color: var(--red);
+    }
+
+    .metric-footer.stable {
+      color: #1d6fe8;
+    }
+
+    .metric-footer.warn {
+      color: var(--amber);
+    }
+
+    /* ─── CARDS ─── */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line2);
+      border-radius: var(--r);
+    }
+
+    .chart-card {
+      padding: 22px 24px 18px;
+      margin-bottom: 16px;
+    }
+
+    .chart-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.2px;
+      text-decoration: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(59, 130, 246, .08);
+      border: 1px solid rgba(59, 130, 246, .2);
+      color: #1d6fe8;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .chart-wrap {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    svg.chart {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    svg.chart circle {
+      cursor: pointer;
+    }
+
+    svg.chart rect[rx] {
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+
+    svg.chart rect[rx]:hover {
+      opacity: 0.75;
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-top: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--sub);
+      justify-content: center;
+    }
+
+    .legend span {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot.actual {
+      background: #2d7ff9;
+    }
+
+    .dot.forecast {
+      background: var(--orange);
+    }
+
+    /* ─── BOTTOM GRID ─── */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .mini-card {
+      padding: 20px 22px 18px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── APPLIANCE ─── */
+    .appliance-wrap {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 20px;
+      align-items: center;
+      margin-top: 14px;
+      flex: 1;
+    }
+
+    .donut {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: conic-gradient(#2d7ff9 0 38%, #ff7a45 38% 56%, #4f8fff 56% 70%, #ffb830 70% 82%, #c5c9d6 82% 100%);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .donut::after {
+      content: "";
+      position: absolute;
+      inset: 34px;
+      background: var(--panel);
+      border-radius: 50%;
+    }
+
+    .appliance-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .appliance-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--sub);
+    }
+
+    .appliance-row strong {
+      margin-left: auto;
+      color: var(--ink);
+      font-weight: 700;
+      font-family: var(--mono);
+    }
+
+    /* ─── HEAT MAP ─── */
+    .usage-strip {
+      display: grid;
+      grid-template-columns: repeat(24, 1fr);
+      gap: 3px;
+      margin-top: 18px;
+    }
+
+    .usage-cell {
+      height: 26px;
+      border-radius: 3px;
+      background: var(--heat);
+    }
+
+    .hours {
+      display: grid;
+      grid-template-columns: repeat(24, 1fr);
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 10px;
+      text-align: center;
+    }
+
+    .heat-legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .heat-swatch {
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      border-radius: 3px;
+    }
+
+    /* ─── BILL ─── */
+    .bill-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .bill-panel {
+      border: 1px solid var(--line2);
+      border-radius: var(--r);
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    .bill-panel h2 {
+      padding: 22px 24px 14px;
+      border-bottom: 1px solid var(--line2);
+      text-decoration: none;
+    }
+
+    .bill-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 54px;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--line2);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--sub);
+    }
+
+    .bill-row:last-child {
+      border-bottom: 0;
+    }
+
+    .bill-row small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .bill-amount {
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .bill-row.total {
+      color: #1d6fe8;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .bill-row.total .bill-amount {
+      color: #1d6fe8;
+      font-size: 16px;
+    }
+
+    /* ─── ALERT ─── */
+    .alert-table {
+      border: 1px solid var(--line2);
+      border-radius: var(--r);
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th {
+      height: 48px;
+      background: var(--ink2);
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: left;
+      padding: 0 20px;
+    }
+
+    td {
+      height: 72px;
+      border-bottom: 1px solid var(--line2);
+      color: var(--ink);
+      font-weight: 500;
+      padding: 0 20px;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 15%;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 10%;
+    }
+
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 15%;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+      width: 45%;
+    }
+
+    th:nth-child(5),
+    td:nth-child(5) {
+      width: 15%;
+      text-align: center;
+    }
+
+    td:nth-child(1) {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--sub);
+    }
+
+    td:nth-child(2) {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--sub);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .warning {
+      background: rgba(255, 184, 48, .12);
+      color: var(--amber);
+      border: 1px solid rgba(255, 184, 48, .25);
+    }
+
+    .critical {
+      background: rgba(255, 77, 106, .12);
+      color: var(--red);
+      border: 1px solid rgba(255, 77, 106, .25);
+    }
+
+    /* ─── TOOLTIP ─── */
+    .chart-tooltip {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999;
+      background: var(--ink);
+      color: #fff;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
+      display: none;
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1300px) {
+      .metrics {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      :root {
+        --side: 200px;
+      }
+
+      .content {
+        padding-inline: 18px;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .bill-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --side: 0px;
+      }
+
+      .app {
+        display: block;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 0;
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 10px 16px;
+        gap: 10px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line2);
+      }
+
+      .brand {
+        padding: 0;
+        border: 0;
+        flex-shrink: 0;
+      }
+
+      .brand-sub {
+        display: none;
+      }
+
+      .nav {
+        display: flex;
+        gap: 4px;
+        overflow-x: auto;
+        padding: 0;
+        flex: 1;
+      }
+
+      .nav-section {
+        display: none;
+      }
+
+      .nav-btn {
+        height: 34px;
+        width: auto;
+        padding: 0 12px;
+        font-size: 12px;
+        margin: 0;
+        border-radius: 8px;
+        white-space: nowrap;
+      }
+
+      .sidebar-footer {
+        display: none;
+      }
+
+      h1 {
+        font-size: 17px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .metrics {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .metric-value {
+        font-size: 20px;
+      }
+
+      .appliance-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-card,
+      .mini-card {
+        padding: 14px;
+      }
+    }
+
+    /* ─── REALTIME PAGE ─── */
+    .realtime-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green);
+      background: rgba(0, 196, 140, .08);
+      border: 1px solid rgba(0, 196, 140, .2);
+      padding: 8px 16px;
+      border-radius: 20px;
+    }
+
+    .rt-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: 1fr;
+      gap: 18px;
+      margin-bottom: 0;
+    }
+
+    .rt-grid .chart-card {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 900px) {
+      .rt-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ─── PIE CHART ─── */
+    #pieChart {
+      cursor: pointer;
+    }
+
+    .appliance-row {
+      cursor: pointer;
+      border-radius: 8px;
+      padding: 4px 6px;
+      margin: -4px -6px;
+    }
+
+    .appliance-row:hover {
+      background: var(--line2);
+    }
+
+    /* ─── HEAT MAP ─── */
+    .heatmap-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 4px;
+      padding: 8px 0;
+      flex: 1;
+    }
+
+    .hm-square-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .hm-square {
+      border-radius: 6px;
+      transition: transform 0.2s cubic-bezier(.4, 0, .2, 1), box-shadow 0.2s;
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: 36px;
+    }
+
+    .hm-square.hm-hover {
+      transform: scale(1.15);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      z-index: 2;
+      position: relative;
+    }
+
+    .hm-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* RT grid: equal card heights with stretching canvas */
+    .rt-grid .chart-card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rt-grid .chart-card canvas {
+      flex: 1;
+      min-height: 160px;
+    }
+
+    /* ─── PROFILE PAGE ─── */
+
+    /* User card in sidebar footer */
+    .sidebar-user {
+      padding: 14px 16px;
+      border-top: 1px solid var(--line2);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sidebar-user-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .sidebar-user-row:hover { background: var(--line2); }
+
+    .user-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1d6fe8, #9b8fff);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      letter-spacing: -0.3px;
+    }
+
+    .user-info { flex: 1; min-width: 0; }
+    .user-name { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-role { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+    /* House selector in sidebar */
+    .house-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: var(--bg);
+      border: 1px solid var(--line2);
+      cursor: pointer;
+      transition: border-color .15s, box-shadow .15s;
+      position: relative;
+    }
+    .house-selector:hover { border-color: var(--teal); }
+
+    .house-icon {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: rgba(29,111,232,.1);
+      color: #1d6fe8;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .house-icon svg { width: 14px; height: 14px; }
+
+    .house-label { flex: 1; min-width: 0; }
+    .house-name { font-size: 12px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .house-address { font-size: 10px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+
+    .house-selector svg.chevron { width: 12px; height: 12px; color: var(--muted); flex-shrink: 0; transition: transform .2s; }
+    .house-selector.open svg.chevron { transform: rotate(180deg); }
+
+    .house-dropdown {
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 0; right: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.12);
+      z-index: 200;
+      padding: 6px;
+      display: none;
+    }
+    .house-selector.open .house-dropdown { display: block; }
+
+    .house-option {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background .1s;
+    }
+    .house-option:hover { background: var(--line2); }
+    .house-option.active { background: rgba(29,111,232,.07); }
+
+    .house-option-icon {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .house-option-text .ho-name { font-size: 12px; font-weight: 700; color: var(--ink); }
+    .house-option-text .ho-addr { font-size: 10px; color: var(--muted); margin-top: 1px; }
+    .house-option-check { margin-left: auto; color: #1d6fe8; opacity: 0; }
+    .house-option.active .house-option-check { opacity: 1; }
+
+    .house-add-btn {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1d6fe8;
+      cursor: pointer;
+      margin-top: 2px;
+      border-top: 1px solid var(--line2);
+      padding-top: 10px;
+      transition: background .1s;
+    }
+    .house-add-btn:hover { background: rgba(29,111,232,.06); }
+
+    /* ─── Profile page content ─── */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .profile-card {
+      background: var(--panel);
+      border: 1px solid var(--line2);
+      border-radius: var(--r);
+      overflow: hidden;
+    }
+
+    .profile-card-head {
+      padding: 28px 28px 24px;
+      text-align: center;
+      border-bottom: 1px solid var(--line2);
+      background: linear-gradient(160deg, rgba(29,111,232,.04) 0%, transparent 60%);
+    }
+
+    .profile-avatar-lg {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1d6fe8, #9b8fff);
+      color: #fff;
+      font-size: 26px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px;
+      letter-spacing: -0.5px;
+      box-shadow: 0 8px 24px rgba(29,111,232,.3);
+    }
+
+    .profile-name { font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; margin-bottom: 4px; }
+    .profile-email { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+
+    .profile-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(0,196,140,.08);
+      border: 1px solid rgba(0,196,140,.2);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .profile-card-body { padding: 20px 24px; }
+
+    .profile-stat-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line2);
+      font-size: 13px;
+    }
+    .profile-stat-row:last-child { border-bottom: 0; }
+    .profile-stat-label { color: var(--muted); font-weight: 500; }
+    .profile-stat-value { font-weight: 700; color: var(--ink); }
+
+    .profile-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    /* Houses list */
+    .houses-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+
+    .house-card {
+      border: 1.5px solid var(--line2);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex; align-items: center; gap: 14px;
+      transition: border-color .15s, box-shadow .15s;
+      cursor: pointer;
+      background: var(--panel);
+      position: relative;
+    }
+    .house-card:hover { border-color: #1d6fe8; box-shadow: 0 0 0 3px rgba(29,111,232,.08); }
+    .house-card.selected { border-color: #1d6fe8; background: rgba(29,111,232,.03); }
+
+    .house-card-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .house-card-info { flex: 1; min-width: 0; }
+    .house-card-name { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+    .house-card-meta { font-size: 12px; color: var(--muted); }
+
+    .house-card-actions {
+      display: flex; gap: 6px; align-items: center;
+    }
+
+    .house-card-selected-badge {
+      font-size: 10px; font-weight: 700; color: #1d6fe8;
+      background: rgba(29,111,232,.1);
+      padding: 3px 9px; border-radius: 20px;
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+
+    .icon-btn {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--sub);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .icon-btn:hover { background: var(--line2); color: var(--ink); border-color: var(--ink); }
+    .icon-btn.danger:hover { background: rgba(255,77,106,.08); color: var(--red); border-color: var(--red); }
+    .icon-btn svg { width: 14px; height: 14px; }
+
+    /* Add house button */
+    .add-house-btn {
+      width: 100%;
+      height: 52px;
+      border: 1.5px dashed var(--line);
+      border-radius: 12px;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s;
+      margin-bottom: 24px;
+    }
+    .add-house-btn:hover { border-color: #1d6fe8; color: #1d6fe8; background: rgba(29,111,232,.03); }
+
+    /* Edit profile form */
+    .profile-form { display: flex; flex-direction: column; gap: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .form-field label {
+      display: block;
+      font-size: 11px; font-weight: 700; color: var(--sub);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 7px;
+    }
+
+    .form-input {
+      width: 100%; height: 42px;
+      padding: 0 14px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--ink);
+      font: inherit; font-size: 13px; font-weight: 500;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s, background .15s;
+    }
+    .form-input:focus { border-color: #1d6fe8; background: #fff; box-shadow: 0 0 0 3px rgba(29,111,232,.1); }
+    .form-input::placeholder { color: var(--muted); font-weight: 400; }
+
+    .form-actions {
+      display: flex; gap: 10px; justify-content: flex-end;
+      padding-top: 6px;
+    }
+
+    .btn-secondary {
+      height: 38px; padding: 0 18px;
+      border: 1.5px solid var(--line); border-radius: 10px;
+      background: transparent; color: var(--sub);
+      font: inherit; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background .15s, color .15s;
+    }
+    .btn-secondary:hover { background: var(--line2); color: var(--ink); }
+
+    .btn-primary {
+      height: 38px; padding: 0 20px;
+      border: none; border-radius: 10px;
+      background: #1d6fe8; color: #fff;
+      font: inherit; font-size: 13px; font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(29,111,232,.3);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(29,111,232,.4); }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(15,17,23,.4);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s;
+    }
+    .modal-overlay.show { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--panel);
+      border: 1px solid var(--line2);
+      border-radius: 20px;
+      padding: 32px;
+      width: 440px;
+      box-shadow: 0 24px 64px rgba(0,0,0,.15);
+      transform: scale(.96) translateY(8px);
+      transition: transform .25s cubic-bezier(.22,1,.36,1);
+    }
+    .modal-overlay.show .modal { transform: scale(1) translateY(0); }
+
+    .modal-title { font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 4px; letter-spacing: -0.3px; }
+    .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+    .modal-divider { height: 1px; background: var(--line2); margin: 0 -32px 24px; }
+
+    .modal-fields { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+    .emoji-picker {
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px;
+      margin-bottom: 14px;
+    }
+    .emoji-opt {
+      width: 36px; height: 36px;
+      border-radius: 8px; border: 1.5px solid var(--line2);
+      background: var(--bg); font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: border-color .15s, background .15s;
+    }
+    .emoji-opt:hover { border-color: #1d6fe8; background: rgba(29,111,232,.06); }
+    .emoji-opt.selected { border-color: #1d6fe8; background: rgba(29,111,232,.1); }
+
+    /* ─── LOGIN PAGE ─── */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    body:has(.login-overlay:not(.hidden)) {
+      overflow: hidden;
+    }
+
+    .login-overlay.hidden {
+      display: none;
+    }
+
+    /* Animated background grid */
+    .login-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,.06) 1px, transparent 1px);
+      background-size: 48px 48px;
+      animation: bgShift 20s linear infinite;
+    }
+
+    @keyframes bgShift {
+      from { background-position: 0 0; }
+      to { background-position: 48px 48px; }
+    }
+
+    /* Glow blobs */
+    .login-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .login-blob-1 {
+      width: 500px; height: 500px;
+      background: rgba(29,111,232,.12);
+      top: -120px; left: -100px;
+      animation: blobFloat 8s ease-in-out infinite;
+    }
+    .login-blob-2 {
+      width: 360px; height: 360px;
+      background: rgba(155,143,255,.1);
+      bottom: -80px; right: -60px;
+      animation: blobFloat 10s ease-in-out infinite reverse;
+    }
+    .login-blob-3 {
+      width: 200px; height: 200px;
+      background: rgba(0,196,140,.08);
+      bottom: 30%; left: 30%;
+      animation: blobFloat 12s ease-in-out infinite 3s;
+    }
+
+    @keyframes blobFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(20px, -30px) scale(1.05); }
+      66% { transform: translate(-15px, 15px) scale(0.95); }
+    }
+
+    /* Login card */
+    .login-card {
+      position: relative;
+      z-index: 2;
+      width: 420px;
+      background: var(--panel);
+      border: 1px solid var(--line2);
+      border-radius: 24px;
+      padding: 44px 44px 40px;
+      box-shadow:
+        0 4px 6px rgba(0,0,0,.04),
+        0 24px 64px rgba(0,0,0,.10),
+        0 0 0 1px rgba(255,255,255,.6) inset;
+      animation: cardIn .5s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(24px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .login-logo {
+      font-family: var(--mono);
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .login-logo .accent { color: #1d6fe8; }
+
+    .login-sub {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .login-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+      margin-bottom: 6px;
+    }
+
+    .login-desc {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .login-divider {
+      height: 1px;
+      background: var(--line2);
+      margin: 0 -44px 28px;
+    }
+
+    .login-field {
+      margin-bottom: 16px;
+    }
+
+    .login-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--sub);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .login-input-wrap {
+      position: relative;
+    }
+
+    .login-input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .login-input {
+      width: 100%;
+      height: 46px;
+      padding: 0 14px 0 42px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      background: var(--bg);
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      transition: border-color .15s, box-shadow .15s, background .15s;
+      outline: none;
+    }
+
+    .login-input:focus {
+      border-color: #1d6fe8;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(29,111,232,.12);
+    }
+
+    .login-input::placeholder { color: var(--muted); font-weight: 400; }
+
+    .login-input.error {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(255,77,106,.1);
+    }
+
+    .pw-toggle {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: color .15s;
+    }
+    .pw-toggle:hover { color: var(--ink); }
+    .pw-toggle svg { width: 16px; height: 16px; }
+
+    .login-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .login-check-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--sub);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .login-check {
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid var(--line);
+      border-radius: 5px;
+      accent-color: #1d6fe8;
+      cursor: pointer;
+    }
+
+    .login-forgot {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1d6fe8;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+    .login-forgot:hover { opacity: .7; }
+
+    .login-error-msg {
+      display: none;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--red);
+      margin-bottom: 16px;
+      padding: 10px 14px;
+      background: rgba(255,77,106,.06);
+      border: 1px solid rgba(255,77,106,.15);
+      border-radius: 10px;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .login-error-msg.show { display: flex; }
+
+    .login-btn {
+      width: 100%;
+      height: 48px;
+      border: none;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #1d6fe8, #2563eb);
+      color: #fff;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 4px 16px rgba(29,111,232,.35);
+    }
+
+    .login-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(29,111,232,.45);
+    }
+
+    .login-btn:active { transform: translateY(0); }
+
+    .login-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.15), transparent);
+    }
+
+    .login-btn.loading {
+      pointer-events: none;
+      opacity: .8;
+    }
+
+    .login-btn-text { position: relative; z-index: 1; }
+    .login-spinner {
+      display: none;
+      position: relative;
+      z-index: 1;
+      width: 20px; height: 20px;
+      margin: 0 auto;
+      border: 2.5px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .login-btn.loading .login-btn-text { display: none; }
+    .login-btn.loading .login-spinner { display: block; }
+
+    .login-footer {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .login-footer-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    .login-footer-text {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    /* Demo hint */
+    .login-demo-hint {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .login-demo-hint b { color: var(--sub); font-weight: 600; }
+  </style>
+</head>
+
+<body>
+
+  <!-- ─── LOGIN PAGE ─── -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-bg"></div>
+    <div class="login-blob login-blob-1"></div>
+    <div class="login-blob login-blob-2"></div>
+    <div class="login-blob login-blob-3"></div>
+
+    <div class="login-card">
+      <div class="login-logo"><span class="accent">Ener</span>lytix</div>
+      <div class="login-sub">Energy Analysis</div>
+
+      <div class="login-title">Welcome back</div>
+      <div class="login-desc">Sign in to your dashboard</div>
+      <div class="login-divider"></div>
+
+      <div class="login-error-msg" id="loginError">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="loginErrorText">อีเมลหรือรหัสผ่านไม่ถูกต้อง</span>
+      </div>
+
+      <div class="login-field">
+        <label class="login-label" for="loginEmail">Email</label>
+        <div class="login-input-wrap">
+          <svg class="login-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <input class="login-input" id="loginEmail" type="email" placeholder="email" autocomplete="username">
+        </div>
+      </div>
+
+      <div class="login-field">
+        <label class="login-label" for="loginPassword">Password</label>
+        <div class="login-input-wrap">
+          <svg class="login-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input class="login-input" id="loginPassword" type="password" placeholder="Password" autocomplete="current-password">
+          <button class="pw-toggle" id="pwToggle" type="button" tabindex="-1" aria-label="Toggle password">
+            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="login-row">
+        <label class="login-check-wrap">
+          <input class="login-check" id="rememberMe" type="checkbox">
+          Remember me
+        </label>
+        <button class="login-forgot" type="button">Forgot password?</button>
+      </div>
+
+      <button class="login-btn" id="loginBtn" type="button">
+        <span class="login-btn-text">Login</span>
+        <div class="login-spinner"></div>
+      </button>
+
+      <div class="login-demo-hint">Demo: <b>admin@enerlytix.com</b> / <b>password123</b></div>
+
+      <!-- <div class="login-footer">
+        <div class="login-footer-dot"></div>
+        <span class="login-footer-text">System Online · Secure Connection</span>
+      </div> -->
+    </div>
+  </div>
+
+  <div class="app">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <div><span class="accent">Ener</span>lytix</div>
+        <div class="brand-sub">Energy Analysis</div>
+      </div>
+
+
+      <nav class="nav">
+        <div class="nav-section">Overview</div>
+        <button class="nav-btn active" data-page="dashboard">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </button>
+
+        <button class="nav-btn" data-page="realtime">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          Real-Time
+        </button>
+
+        <div class="nav-section">Analysis</div>
+        <button class="nav-btn" data-page="forecast">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+          Energy Forecast
+        </button>
+
+        <button class="nav-btn" data-page="bill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2" />
+            <line x1="2" y1="10" x2="22" y2="10" />
+          </svg>
+          Bill Calculator
+        </button>
+
+        <button class="nav-btn" data-page="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          Alert
+        </button>
+
+        <!-- <div class="nav-section">Account</div>
+        <button class="nav-btn" data-page="profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          Profile
+        </button> -->
+      </nav>
+
+      <!-- Sidebar user footer -->
+      <div class="sidebar-user">
+        <!-- House switcher -->
+        <!-- <div class="house-selector" id="houseSelectorPill">
+          <div class="house-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div class="house-label">
+            <div class="house-name" id="sidebarHouseName">Main House</div>
+            <div class="house-address" id="sidebarHouseAddr">123 Sukhumvit Rd, Bangkok</div>
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <div class="house-dropdown" id="sidebarHouseDropdown"></div>
+        </div> -->
+
+        <!-- User row -->
+        <div class="sidebar-user-row" id="sidebarUserRow">
+          <div class="user-avatar" id="sidebarAvatar">AD</div>
+          <div class="user-info">
+            <div class="user-name" id="sidebarUserName">Admin User</div>
+            <div class="user-role">Administrator</div>
+          </div>
+          <!-- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;color:var(--muted);flex-shrink:0"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg> -->
+        </div>
+      </div>
+    </aside>
+
+
+    <main class="main">
+      <header class="topbar">
+        <h1 id="pageTitle">Dashboard</h1>
+        <span id="currentDate" style="font-family:var(--mono);font-size:12px;color:var(--muted)"></span>
+      </header>
+
+
+      <section class="content">
+        <div class="controls" id="mainControls">
+          <div class="segment">
+            <button data-period="overview">Year</button>
+            <button class="active" data-period="monthly">Month</button>
+            <button data-period="daily">Day</button>
+          </div>
+          <div class="selects" id="dateControls"></div>
+        </div>
+
+        <div class="chart-tooltip" id="chartTooltip"></div>
+
+        <!-- DASHBOARD -->
+        <div id="dashboardPage">
+          <div class="metrics" id="dashboardMetrics"></div>
+          <section class="card chart-card">
+
+            <div class="chart-head">
+
+              <h2>Energy Trend (kWh)</h2>
+
+              <button id="scaleModeBtn"
+                style="height:32px;padding:0 14px;border-radius:20px;border:1px solid rgba(29,111,232,.25);background:rgba(29,111,232,.1);color:#1d6fe8;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .15s;">⇅
+                Auto Scale
+              </button>
+            </div>
+            <div class="chart-wrap" id="dashboardTrend"></div>
+          </section>
+
+          <div class="bottom-grid">
+
+            <section class="card mini-card">
+              <h2>Appliance Breakdown</h2>
+              <div class="appliance-wrap">
+                <canvas id="pieChart" width="140" height="140" style="flex-shrink:0;"></canvas>
+                <div class="appliance-list"></div>
+              </div>
+            </section>
+
+            <section class="card mini-card">
+              <h2>Daily Usage Pattern</h2>
+              <div id="heatMapCanvas" style="margin-top:16px;"></div>
+              <div class="heat-legend">
+                <span>Low</span>
+                <span class="heat-swatch" style="background:#E6F7ED"></span>
+                <span class="heat-swatch" style="background:#A7F3D0"></span>
+                <span class="heat-swatch" style="background:#FDE68A"></span>
+                <span class="heat-swatch" style="background:#ffb830"></span>
+                <span class="heat-swatch" style="background:#ff4d6a"></span>
+                <span>High</span>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- REAL-TIME -->
+        <div id="realtimePage" class="hidden">
+          <div class="realtime-header"
+            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+            <div class="live-indicator"><span class="status-dot"></span>Live Feed — Updated every 30s</div>
+
+            <div class="selects">
+              <span class="select-pill" id="rtApplianceDropdownBtn" data-picker="rtAppliance">
+                <span id="rtSelectedApplianceLabel">Total House</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                  stroke-linejoin="round" style="width:14px; height:14px; opacity:0.7; margin-left:6px;">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+                <div class="dropdown" id="rtApplianceDropdownMenu">
+                  <div class="dropdown-item active" data-rt-app="total">Total House</div>
+                  <div class="dropdown-item " data-rt-app="ac">Air Conditioner</div>
+                  <div class="dropdown-item" data-rt-app="heater">Water Heater</div>
+                  <div class="dropdown-item" data-rt-app="fridge">Refrigerator</div>
+                  <div class="dropdown-item" data-rt-app="washer">Washer/Dryer</div>
+                </div>
+              </span>
+            </div>
+          </div>
+
+          <div class="metrics four" id="realtimeMetrics"></div>
+
+          <div class="rt-grid">
+
+            <section class="card chart-card">
+              <div class="chart-head">
+                <h2>Power (kW)</h2>
+                <span class="badge" id="rtPowerBadge">0.82 kW</span>
+              </div>
+              <canvas id="rtPowerChart" height="200" style="width:100%;display:block;flex:1;"></canvas>
+            </section>
+
+            <section class="card chart-card">
+              <div class="chart-head">
+                <h2>Current (A)</h2>
+                <span class="badge" id="rtCurrentBadge">3.57 A</span>
+              </div>
+              <canvas id="rtCurrentChart" height="200" style="width:100%;display:block;flex:1;"></canvas>
+            </section>
+
+            <section class="card chart-card">
+              <div class="chart-head">
+                <h2>Voltage (V)</h2>
+                <span class="badge" id="rtVoltageBadge">230 V</span>
+              </div>
+              <canvas id="rtVoltageChart" height="200" style="width:100%;display:block;flex:1;"></canvas>
+            </section>
+
+            <section class="card chart-card">
+              <div class="chart-head">
+                <h2>Power Factor</h2>
+                <span class="badge" id="rtPFBadge">0.94</span>
+              </div>
+              <canvas id="rtPFChart" height="200" style="width:100%;display:block;flex:1;"></canvas>
+            </section>
+
+          </div>
+        </div>
+
+        <!-- FORECAST -->
+        <div id="forecastPage" class="hidden">
+          <div class="metrics four" id="forecastMetrics"></div>
+
+          <section class="card chart-card">
+            <div class="chart-head">
+              <h2>Actual vs Forecast (kWh)</h2>
+              <span class="badge" id="forecastAccuracy">Accuracy 80%</span>
+            </div>
+            <div class="chart-wrap" id="forecastLine"></div>
+            <div class="legend"><span><i class="dot actual"></i>Actual</span><span><i
+                  class="dot forecast"></i>Forecast</span></div>
+          </section>
+
+          <section class="card chart-card">
+            <div class="chart-head">
+              <h2>Monthly Comparison (kWh)</h2>
+              <div class="legend" style="margin:0"><span><i class="dot forecast"></i>Forecast</span><span><i
+                    class="dot actual"></i>Actual</span></div>
+            </div>
+            <div class="chart-wrap" id="forecastBars"></div>
+          </section>
+        </div>
+
+        <!-- BILL -->
+        <div id="billPage" class="hidden">
+          <div class="metrics four" id="billMetrics"></div>
+
+          <div id="billOverview" class="bill-grid" style="margin-bottom:16px;">
+            <section class="bill-panel">
+              <h2>Billing Details</h2>
+              <div id="billingDetailsRows"></div>
+            </section>
+            <section class="bill-panel">
+              <h2 style="padding:22px 24px 14px;border-bottom:1px solid var(--line2);">Usage Breakdown</h2>
+              <div id="billingUsageRows"></div>
+            </section>
+          </div>
+
+          <section id="billYear" class="bill-panel hidden" style="margin-top:0;overflow:hidden;">
+            <div
+              style="padding:22px 24px 14px; border-bottom:1px solid var(--line2); display:flex; align-items:center; justify-content:space-between;">
+              <h2 style="text-decoration:none;border:none;">Billing History</h2>
+              <span id="billHistoryBadge"
+                style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--sub);background:var(--line2);padding:4px 10px;border-radius:20px;">2020</span>
+            </div>
+            <div id="dailyBillBars" style="padding:0;overflow:hidden;"></div>
+          </section>
+        </div>
+
+        <!-- ALERT -->
+        <div id="alertPage" class="hidden">
+          <div class="alert-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Topic</th>
+                  <th>Description</th>
+                  <th>Severity</th>
+                </tr>
+              </thead>
+              <tbody id="alertRows"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PROFILE -->
+        <div id="profilePage" class="hidden">
+          <div class="profile-grid">
+
+            <!-- Left: User card -->
+            <div>
+              <div class="profile-card" style="margin-bottom:16px;">
+                <div class="profile-card-head">
+                  <div class="profile-avatar-lg" id="profileAvatarLg">AD</div>
+                  <div class="profile-name" id="profileDisplayName">Admin User</div>
+                  <div class="profile-email" id="profileDisplayEmail">admin@enerlytix.com</div>
+                  <span class="profile-badge">
+                    <span class="status-dot" style="margin:0;width:5px;height:5px;"></span>
+                    Active
+                  </span>
+                </div>
+                <div class="profile-card-body">
+                  <div class="profile-stat-row">
+                    <span class="profile-stat-label">Member since</span>
+                    <span class="profile-stat-value">Jan 2024</span>
+                  </div>
+                  <div class="profile-stat-row">
+                    <span class="profile-stat-label">Total houses</span>
+                    <span class="profile-stat-value" id="profileHouseCount">3</span>
+                  </div>
+                  <div class="profile-stat-row">
+                    <span class="profile-stat-label">Active house</span>
+                    <span class="profile-stat-value" id="profileActiveHouse">Main House</span>
+                  </div>
+                  <!-- <div class="profile-stat-row">
+                    <span class="profile-stat-label">Plan</span>
+                    <span class="profile-stat-value" style="color:#1d6fe8;">Pro</span>
+                  </div> -->
+                </div>
+              </div>
+
+              <!-- Logout -->
+              <button class="add-house-btn" id="logoutBtn" style="border-color:rgba(255,77,106,.3);color:var(--red);margin-bottom:0;" onmouseover="this.style.borderColor='var(--red)';this.style.background='rgba(255,77,106,.04)'" onmouseout="this.style.borderColor='rgba(255,77,106,.3)';this.style.background='transparent'">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Sign Out
+              </button>
+            </div>
+
+            <!-- Right: Edit form + Houses -->
+            <div>
+              <!-- Edit profile -->
+              <div class="profile-card" style="margin-bottom:16px;">
+                <div style="padding:22px 24px 18px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;">
+                  <h2 style="margin:0;font-size:15px;">Edit Profile</h2>
+                </div>
+                <div style="padding:24px;">
+                  <div class="profile-form">
+                    <div class="form-row">
+                      <div class="form-field">
+                        <label>First Name</label>
+                        <input class="form-input" id="pFirstName" type="text" value="Admin">
+                      </div>
+                      <div class="form-field">
+                        <label>Last Name</label>
+                        <input class="form-input" id="pLastName" type="text" value="User">
+                      </div>
+                    </div>
+                    <div class="form-field">
+                      <label>Email</label>
+                      <input class="form-input" id="pEmail" type="email" value="admin@enerlytix.com">
+                    </div>
+                    <!-- <div class="form-field">
+                      <label>Phone</label>
+                      <input class="form-input" id="pPhone" type="tel" placeholder="+66 8x-xxx-xxxx">
+                    </div> -->
+                    <div class="form-actions">
+                      <button class="btn-secondary" id="profileCancelBtn">Cancel</button>
+                      <button class="btn-primary" id="profileSaveBtn">Save Changes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Houses -->
+              <div class="profile-card">
+                <div style="padding:22px 24px 18px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;">
+                  <h2 style="margin:0;font-size:15px;">My Houses</h2>
+                  <span id="houseCountBadge" style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--sub);background:var(--line2);padding:3px 10px;border-radius:20px;">3</span>
+                </div>
+                <div style="padding:20px 20px 6px;">
+                  <div class="houses-list" id="housesList"></div>
+                  <!-- <button class="add-house-btn" id="addHouseBtn"> -->
+                    <!-- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> -->
+                    <!-- Add New House -->
+                  </button>
+                </div> 
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <!-- Add House Modal -->
+  <!-- <div class="modal-overlay" id="addHouseModal">
+    <div class="modal">
+      <div class="modal-title">Add New House</div>
+      <div class="modal-sub">เพิ่มที่อยู่อาศัยใหม่เข้าสู่บัญชีของคุณ</div>
+      <div class="modal-divider"></div>
+      <div class="modal-fields">
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">Icon</label>
+          <div class="emoji-picker" id="emojiPicker">
+            <div class="emoji-opt selected" data-emoji="🏠">🏠</div>
+            <div class="emoji-opt" data-emoji="🏡">🏡</div>
+            <div class="emoji-opt" data-emoji="🏘">🏘</div>
+            <div class="emoji-opt" data-emoji="🏗">🏗</div>
+            <div class="emoji-opt" data-emoji="🏢">🏢</div>
+            <div class="emoji-opt" data-emoji="🏖">🏖</div>
+          </div>
+        </div>
+        <div class="form-field">
+          <label style="display:block;font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;">House Name</label>
+          <input class="form-input" id="modalHouseName" type="text" placeholder="e.g. Beach House">
+        </div>
+        <div class="form-field">
+          <label style="display:block;font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;">Address</label>
+          <input class="form-input" id="modalHouseAddr" type="text" placeholder="e.g. 88 Pattaya Beach Rd">
+        </div>
+        <div class="form-field">
+          <label style="display:block;font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;">Area (sq.m)</label>
+          <input class="form-input" id="modalHouseArea" type="number" placeholder="120">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="modalCancelBtn">Cancel</button>
+        <button class="btn-primary" id="modalSaveBtn">Add House</button>
+      </div>
+    </div>
+  </div> -->
+
+  <script>
+    // ═══ js/state.js ═══
+    // ─── STATE & CONSTANTS ───
+
+    const state = { page: "dashboard", period: "monthly" };
+    const pages = { dashboard: "Dashboard", realtime: "Real-Time", forecast: "Energy Forecast", bill: "Bill Calculator", alert: "Alert", profile: "Profile" };
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const dateState = { day: 4, month: 7, year: 2020 };
+
+    // ─── DATE UTILITIES ───
+
+    const daysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
+    const monthShift = offset => (dateState.month + offset + 12) % 12;
+    const monthLabel = offset => monthNames[monthShift(offset)];
+    const selectedDate = () => `${String(dateState.day).padStart(2, '0')} ${monthNames[dateState.month]} ${dateState.year}`;
+
+    // ─── SEEDED RANDOM ───
+
+    const daySeed = () => (dateState.year * 372 + dateState.month * 31 + dateState.day);
+    const seededValue = (index, min, max) => {
+      const raw = Math.sin((daySeed() + index * 17.17) * 12.9898) * 43758.5453;
+      return Math.round(min + (raw - Math.floor(raw)) * (max - min));
+    };
+
+    // ═══ js/ui.js ═══
+    // ─── UI COMPONENTS ───
+
+
+
+    // ─── CURRENT DATE DISPLAY ───
+
+    const dateEl = document.getElementById('currentDate');
+
+    function updateCurrentDate() {
+      if (dateEl) dateEl.textContent = state.page === 'realtime' ? new Date().toLocaleTimeString() : selectedDate();
+    }
+
+    // ─── TREND ICON ───
+
+    function trendIcon(down) {
+      const color = down ? '#ff4d6a' : '#00c48c';
+      const arrow = down ? '▼' : '▲';
+      return `<span style="color:${color}">${arrow}</span>`;
+    }
+
+    // ─── STATUS INFO ───
+
+    function getStatusInfo(type, value) {
+      // type: 'power' | 'pf' | 'voltage'
+      if (type === 'power') {
+        const v = parseFloat(value);
+        if (v < 0.7) return { text: 'Low Load', cls: 'down' };
+        if (v > 0.9) return { text: 'High Load', cls: 'warn' };
+        return { text: 'Stable', cls: 'stable' };
+      }
+      if (type === 'pf') {
+        const v = parseFloat(value);
+        if (v < 0.92) return { text: 'Low PF', cls: 'warn' };
+        return { text: 'Normal', cls: 'stable' };
+      }
+      if (type === 'voltage') {
+        const v = parseInt(value);
+        if (v < 220) return { text: 'Under-Voltage', cls: 'down' };
+        if (v > 240) return { text: 'Over-Voltage', cls: 'warn' };
+        return { text: 'Normal', cls: 'stable' };
+      }
+      return { text: '', cls: 'stable' };
+    }
+
+    // ─── METRIC CARD ───
+
+    function metric({ title, value, unit, note, percent, down, status, statusCls }) {
+      let footer = '';
+      if (status) {
+        const cls = statusCls || (status.type === 'peak' ? 'warn' : 'stable');
+        footer = `<div class="metric-footer ${cls}">${status.text}</div>`;
+      } else if (percent) {
+        footer = `<div class="metric-footer ${down ? 'down' : 'up'}">${trendIcon(down)} ${percent} ${note}</div>`;
+      }
+      return `<article class="metric">
+    <div class="metric-label">${title}</div>
+    <div class="metric-value"><span>${value}</span>${unit ? `<span class="metric-unit">${unit}</span>` : ''}</div>
+    ${footer}
+  </article>`;
+    }
+
+    // ─── DATE CONTROLS ───
+
+    function dateControls() {
+      const numDays = daysInMonth(dateState.month, dateState.year);
+      const dayPill = makePill('day', String(dateState.day).padStart(2, '0'), Array.from({ length: numDays }, (_, i) => ({ val: i + 1, label: String(i + 1).padStart(2, '0') })));
+      const monthPill = makePill('month', monthNames[dateState.month], monthNames.map((m, i) => ({ val: i, label: m })));
+      const years = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+      const yearPill = makePill('year', String(dateState.year), years.map(y => ({ val: y, label: String(y) })));
+      if (state.period === 'daily') return dayPill + monthPill + yearPill;
+      if (state.period === 'monthly') return monthPill + yearPill;
+      return yearPill;
+    }
+
+    function makePill(type, display, items) {
+      const cur = dateState[type];
+      const dropdown = items.map(it => `<div class="dropdown-item${it.val == cur ? ' active' : ''}" data-type="${type}" data-val="${it.val}">${it.label}</div>`).join('');
+      return `<span class="select-pill" data-picker="${type}">${display}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg><div class="dropdown">${dropdown}</div></span>`;
+    }
+
+    // ═══ js/metrics.js ═══
+    // ─── METRIC CALCULATIONS & RENDERING ───
+
+
+
+
+    // ─── COMPUTE DERIVED METRICS ───
+
+    function calcDerivedMetrics() {
+      const totalYear = 9000 + seededValue(100, 200, 800);
+      const totalMonth = 800 + seededValue(101, 80, 260);
+      const totalDay = 60 + seededValue(102, 5, 25);
+      const prevYear = 9000 + seededValue(200, 200, 800);
+      const prevMonth = 800 + seededValue(201, 80, 260);
+      const prevDay = 60 + seededValue(202, 5, 25);
+      const pctYear = (((totalYear - prevYear) / prevYear) * 100).toFixed(1) + '%';
+      const pctMonth = (((totalMonth - prevMonth) / prevMonth) * 100).toFixed(1) + '%';
+      const pctDay = (((totalDay - prevDay) / prevDay) * 100).toFixed(1) + '%';
+      const downYear = totalYear < prevYear;
+      const downMonth = totalMonth < prevMonth;
+      const downDay = totalDay < prevDay;
+
+      const avgPower = (0.70 + (seededValue(103, 0, 200) / 1000)).toFixed(2);
+      const pf = (0.92 + (seededValue(104, 0, 40) / 1000)).toFixed(2);
+      const voltage = 220 + seededValue(105, 0, 20);
+      const peakPower = (4.5 + seededValue(106, 0, 20) / 10).toFixed(2);
+      const peakHour = String(18 + seededValue(107, 0, 5)).padStart(2, '0') + ':00';
+      let peakDateStr;
+      if (state.period === 'daily') {
+        peakDateStr = `${String(dateState.day).padStart(2, '0')}/${String(dateState.month + 1).padStart(2, '0')}/${String(dateState.year).slice(-2)} ${peakHour}`;
+      } else if (state.period === 'monthly') {
+        const peakDay = 1 + seededValue(108, 0, daysInMonth(dateState.month, dateState.year) - 1);
+        peakDateStr = `${String(peakDay).padStart(2, '0')}/${String(dateState.month + 1).padStart(2, '0')}/${String(dateState.year).slice(-2)} ${peakHour}`;
+      } else {
+        const peakMon = 1 + seededValue(109, 0, 11);
+        const peakDay = 1 + seededValue(110, 0, 27);
+        peakDateStr = `${String(peakDay).padStart(2, '0')}/${String(peakMon).padStart(2, '0')}/${String(dateState.year).slice(-2)} ${peakHour}`;
+      }
+      return { totalYear, totalMonth, totalDay, pctYear, pctMonth, pctDay, downYear, downMonth, downDay, avgPower, pf, voltage, peakPower, peakDateStr };
+    }
+
+    // ─── RENDER METRIC CARDS ───
+
+    function setMetrics() {
+      const m = calcDerivedMetrics();
+      const pwrStatus = getStatusInfo('power', m.avgPower);
+      const pfStatus = getStatusInfo('pf', m.pf);
+      const vStatus = getStatusInfo('voltage', m.voltage);
+
+      const dash = {
+        overview: [
+          { title: "Total Energy (1 Year)", value: m.totalYear.toLocaleString(), unit: "kWh", note: "from last year", percent: m.pctYear, down: m.downYear },
+          { title: "Avg. Power", value: m.avgPower, unit: "kW", status: { text: pwrStatus.text }, statusCls: pwrStatus.cls },
+          { title: "Power Factor", value: m.pf, unit: "", status: { text: pfStatus.text }, statusCls: pfStatus.cls },
+          { title: "Avg. Voltage", value: String(m.voltage), unit: "V", status: { text: vStatus.text }, statusCls: vStatus.cls },
+          { title: "Peak Power", value: m.peakPower, unit: "kW", status: { text: m.peakDateStr, type: "peak" } }
+        ],
+        monthly: [
+          { title: "Total Energy (1 Month)", value: m.totalMonth.toLocaleString(), unit: "kWh", note: "from last month", percent: m.pctMonth, down: m.downMonth },
+          { title: "Avg. Power", value: m.avgPower, unit: "kW", status: { text: pwrStatus.text }, statusCls: pwrStatus.cls },
+          { title: "Power Factor", value: m.pf, unit: "", status: { text: pfStatus.text }, statusCls: pfStatus.cls },
+          { title: "Avg. Voltage", value: String(m.voltage), unit: "V", status: { text: vStatus.text }, statusCls: vStatus.cls },
+          { title: "Peak Power", value: m.peakPower, unit: "kW", status: { text: m.peakDateStr, type: "peak" } }
+        ],
+        daily: [
+          { title: "Total Energy (1 Day)", value: m.totalDay.toLocaleString(), unit: "kWh", note: "from yesterday", percent: m.pctDay, down: m.downDay },
+          { title: "Avg. Power", value: m.avgPower, unit: "kW", status: { text: pwrStatus.text }, statusCls: pwrStatus.cls },
+          { title: "Power Factor", value: m.pf, unit: "", status: { text: pfStatus.text }, statusCls: pfStatus.cls },
+          { title: "Avg. Voltage", value: String(m.voltage), unit: "V", status: { text: vStatus.text }, statusCls: vStatus.cls },
+          { title: "Peak Power", value: m.peakPower, unit: "kW", status: { text: m.peakDateStr, type: "peak" } }
+        ]
+      };
+
+      const fc0 = 1900 + seededValue(1, 40, 260);
+      const fc1 = 1980 + seededValue(2, 60, 290);
+      const fc2 = 1800 + seededValue(3, 30, 220);
+      const fcElec = 6200 + seededValue(4, 80, 740);
+      const fcPrev0 = 1900 + seededValue(21, 40, 260);
+      const fcPrev1 = 1980 + seededValue(22, 60, 290);
+      const fcPrev2 = 1800 + seededValue(23, 30, 220);
+      const fcPrevElec = 6200 + seededValue(24, 80, 740);
+      const fcPct0 = Math.abs(((fc0 - fcPrev0) / fcPrev0) * 100).toFixed(1) + '%';
+      const fcPct1 = Math.abs(((fc1 - fcPrev1) / fcPrev1) * 100).toFixed(1) + '%';
+      const fcPct2 = Math.abs(((fc2 - fcPrev2) / fcPrev2) * 100).toFixed(1) + '%';
+      const fcPct3 = Math.abs(((fcElec - fcPrevElec) / fcPrevElec) * 100).toFixed(1) + '%';
+
+      const forecast = [
+        { title: `${monthLabel(0)} (Forecast)`, value: fc0.toLocaleString(), unit: "kWh", note: `from ${monthLabel(-1)}`, percent: fcPct0, down: fc0 < fcPrev0 },
+        { title: `${monthLabel(1)} (Forecast)`, value: fc1.toLocaleString(), unit: "kWh", note: `from ${monthLabel(0)}`, percent: fcPct1, down: fc1 < fcPrev1 },
+        { title: `${monthLabel(2)} (Forecast)`, value: fc2.toLocaleString(), unit: "kWh", note: `from ${monthLabel(1)}`, percent: fcPct2, down: fc2 < fcPrev2 },
+        { title: `${monthLabel(0)} Electricity`, value: fcElec.toLocaleString(), unit: "฿", note: `from ${monthLabel(-1)}`, percent: fcPct3, down: fcElec < fcPrevElec }
+      ];
+
+      const billTotal = 95000 + seededValue(30, 1000, 8000);
+      const prevBillTotal = 95000 + seededValue(130, 1000, 8000);
+      const billPct = Math.abs(((billTotal - prevBillTotal) / prevBillTotal) * 100).toFixed(1) + '%';
+      const monthUsage = 1700 + seededValue(5, 50, 260);
+      const prevMonthUsage = 1700 + seededValue(55, 50, 260);
+      const monthPct = Math.abs(((monthUsage - prevMonthUsage) / prevMonthUsage) * 100).toFixed(1) + '%';
+      const energyCost = 4800 + seededValue(31, 200, 900);
+      const ftRate = 350 + seededValue(32, 10, 60);
+      const netTotal = Math.round((energyCost + ftRate) * 1.07);
+
+      // สร้างตัวแปรคำนวณค่าไฟรายวันเฉพาะกิจ เพื่อเอาไปแสดงบนการ์ด 4 ใบด้านบน
+      const dailyKwh = Math.round(50 + seededValue(5, -15, 25));
+      const dailyEnergyCost = Math.round(dailyKwh * 4.2);
+      const dailyFt = Math.round(dailyKwh * 0.39);
+      const dailyNet = Math.round((dailyEnergyCost + dailyFt) * 1.07);
+      const dailyPct = "4.2%"; // ตัวเลขเปอร์เซ็นต์สมมุติต่างจากเมื่อวาน
+      const dailyDown = seededValue(6, 0, 10) > 5;
+
+      let bill;
+      if (state.period === 'overview') {
+        bill = [
+          { title: "Total", value: billTotal.toLocaleString(), unit: "฿", note: "from last year", percent: billPct, down: billTotal < prevBillTotal },
+          { title: "Highest Month", value: (6800 + seededValue(33, 100, 400)).toLocaleString(), unit: "฿", status: { text: "+ VAT 7%" } },
+          { title: "Lowest Month", value: (1200 + seededValue(34, 50, 300)).toLocaleString(), unit: "฿", status: { text: "+ VAT 7%" } },
+          { title: "Monthly Average", value: Math.round(billTotal / 12).toLocaleString(), unit: "฿", status: { text: "+ VAT 7%" } }
+        ];
+      } else if (state.period === 'daily') {
+        // 🌟 นี่คือส่วนที่เพิ่มเข้ามาใหม่สำหรับหน้า Day โดยเฉพาะ
+        bill = [
+          { title: "Total energy", value: dailyKwh.toLocaleString(), unit: "kWh", note: "from yesterday", percent: dailyPct, down: dailyDown },
+          { title: "Energy Cost", value: dailyEnergyCost.toLocaleString(), unit: "฿", status: { text: "Before FT & VAT" } },
+          // { title: "FT Rate", value: dailyFt.toLocaleString(), unit: "฿", status: { text: "Fuel Tariff" }},
+          // { title: "Net Total", value: dailyNet.toLocaleString(), unit: "฿", status: { text: "+ VAT 7%" } }
+        ];
+      } else {
+        // สำหรับหน้า Month ปกติ
+        bill = [
+          { title: `Total energy`, value: monthUsage.toLocaleString(), unit: "kWh", note: `from ${monthLabel(-1)}`, percent: monthPct, down: monthUsage < prevMonthUsage },
+          { title: "Energy Cost", value: energyCost.toLocaleString(), unit: "฿", status: { text: "Before FT & VAT" } },
+          { title: "FT Rate", value: `${ftRate}`, unit: "฿", status: { text: "Fuel Tariff" } },
+          { title: "Net Total", value: netTotal.toLocaleString(), unit: "฿", status: { text: "+ VAT 7%" } }
+        ];
+      }
+
+      document.querySelector('#dashboardMetrics').innerHTML = dash[state.period].map(d => metric(d)).join('');
+      document.querySelector('#forecastMetrics').innerHTML = forecast.map(d => metric(d)).join('');
+      document.querySelector('#billMetrics').innerHTML = bill.map(d => metric(d)).join('');
+    }
+
+    // ═══ js/charts.js ═══
+    // ─── SVG CHART FUNCTIONS ───
+
+
+
+    // ─── COLOR CONSTANTS ───
+
+    const C = {
+      teal: '#2d7ff9', orange: '#ff7a45', blue: '#4f8fff',
+      line: '#dde0eb', text: '#8a90a0', white: '#fff',
+      bg: '#ffffff', gridLine: 'rgba(0,0,0,0.05)'
+    };
+
+    // ─── AXIS SCALING ───
+
+    function niceScale(dataMax, tickCount = 6) {
+      if (dataMax <= 0) return { max: 10, ticks: [0, 2, 4, 6, 8, 10] };
+      const rawStep = dataMax / (tickCount - 1);
+      const mag = Math.pow(10, Math.floor(Math.log10(rawStep)));
+      const niceSteps = [1, 2, 2.5, 5, 10];
+      const step = niceSteps.map(s => s * mag).find(s => s >= rawStep) || niceSteps[niceSteps.length - 1] * mag;
+      const niceMax = Math.ceil(dataMax / step) * step;
+      const ticks = Array.from({ length: Math.round(niceMax / step) + 1 }, (_, i) => parseFloat((i * step).toFixed(6)));
+      return { max: niceMax, ticks };
+    }
+
+    // ─── LINE CHART (SVG) ───
+
+    function lineChart({ values, labels, max, color = C.teal, fill = false, height = 300, yTicks, autoScale = false }) {
+      let useMax = max, useTicks = yTicks;
+      if (autoScale || max == null) {
+        const dataMax = Math.max(...values);
+        const scaled = niceScale(dataMax * 1.1);
+        useMax = scaled.max;
+        useTicks = scaled.ticks;
+      }
+      if (!useTicks) {
+        const { ticks } = niceScale(useMax);
+        useTicks = ticks;
+      }
+      const w = 1200, h = height, left = 72, right = 20, top = 20, bottom = 40;
+      const cw = w - left - right, ch = h - top - bottom;
+      const pts = values.map((v, i) => [left + (cw * i) / (values.length - 1), top + ch - (v / useMax) * ch]);
+      const curvePath = points => points.map((p, i) => {
+        if (i === 0) return `M${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+        const prev = points[i - 1];
+        const cx = (prev[0] + p[0]) / 2;
+        return `C${cx.toFixed(1)},${prev[1].toFixed(1)} ${cx.toFixed(1)},${p[1].toFixed(1)} ${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+      }).join(' ');
+      const d = curvePath(pts);
+      const area = `${d} L${pts[pts.length - 1][0]},${top + ch} L${pts[0][0]},${top + ch} Z`;
+      const gridY = useTicks.map(t => {
+        const y = top + ch - (t / useMax) * ch;
+        const label = t >= 1000 ? (t / 1000).toFixed(t % 1000 === 0 ? 0 : 1) + 'k' : t % 1 !== 0 ? t.toFixed(1) : String(t);
+        return `<line x1="${left}" x2="${w - right}" y1="${y}" y2="${y}" stroke="${C.gridLine}" stroke-width="1.2"/>
+            <text x="${left - 10}" y="${y + 4}" text-anchor="end" fill="${C.text}" font-size="12" font-family="Space Mono">${label}</text>`;
+      }).join('');
+      const xStep = values.length > 20 ? Math.ceil(values.length / 12) : 1;
+      const gridX = labels.map((lab, i) => {
+        if (i % xStep !== 0 && i !== labels.length - 1) return '';
+        const x = left + (cw * i) / (labels.length - 1);
+        return `<text x="${x}" y="${top + ch + 24}" text-anchor="middle" fill="${C.text}" font-size="12">${lab}</text>`;
+      }).join('');
+      const uid = `lc${Math.random().toString(36).slice(2, 6)}`;
+      return `<svg class="chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <linearGradient id="${uid}" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0" stop-color="${color}" stop-opacity=".3"/>
+        <stop offset="1" stop-color="${color}" stop-opacity="0"/>
+      </linearGradient>
+      <filter id="${uid}glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <rect width="${w}" height="${h}" fill="transparent"/>
+    ${gridY}${gridX}
+    <line x1="${left}" x2="${w - right}" y1="${top + ch}" y2="${top + ch}" stroke="${C.line}"/>
+    ${fill ? `<path d="${area}" fill="url(#${uid})"/>` : ''}
+    <path d="${d}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#${uid}glow)"/>
+    ${pts.map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="4" fill="${color}" stroke="${C.bg}" stroke-width="2"><title>${labels[i]}: ${values[i]}</title></circle>`).join('')}
+  </svg>`;
+    }
+
+    // ─── FORECAST LINE CHART with real grid ───
+
+    function forecastLineChart() {
+      const w = 1200, left = 72, right = 30, top = 20, bottom = 42;
+      const h = 300;
+      const cw = w - left - right, ch = h - top - bottom;
+      const numPts = 12;
+
+      // Actual data: Jan to dateState.month (inclusive)
+      const splitAt = dateState.month; // 0-indexed month
+      const actual = Array.from({ length: splitAt + 1 }, (_, i) => {
+        const base = 600 + 300 * Math.sin((i / 12) * Math.PI * 2 + 1);
+        return Math.max(10, Math.round((base + seededValue(i + 400, -60, 60)) * 10) / 10);
+      });
+      // Forecast data: from dateState.month to Dec
+      const forecast = Array.from({ length: 12 - splitAt }, (_, i) => {
+        const mi = i + splitAt;
+        const base = 620 + 280 * Math.sin((mi / 12) * Math.PI * 2 + 1);
+        return Math.max(10, Math.round((base + seededValue(mi + 430, -50, 50)) * 10) / 10);
+      });
+      const bandHi = forecast.map(v => Math.round(v * 1.12 * 10) / 10);
+      const bandLo = forecast.map(v => Math.round(v * 0.88 * 10) / 10);
+
+      const allValues = [...actual, ...forecast, ...bandHi];
+      const dataMax = Math.max(...allValues);
+      const { max, ticks } = niceScale(dataMax * 1.1);
+
+      const xOf = i => left + (cw * i) / (numPts - 1);
+      const yOf = v => top + ch - (v / max) * ch;
+
+      const apt = actual.map((v, i) => [xOf(i), yOf(v)]);
+      const fpt = forecast.map((v, i) => [xOf(i + splitAt), yOf(v)]);
+      const hiPt = bandHi.map((v, i) => [xOf(i + splitAt), yOf(v)]);
+      const loPt = bandLo.map((v, i) => [xOf(i + splitAt), yOf(v)]).reverse();
+
+      const curve = pts => pts.map((p, i) => {
+        if (i === 0) return `M${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+        const prev = pts[i - 1];
+        const cx = (prev[0] + p[0]) / 2;
+        return `C${cx.toFixed(1)},${prev[1].toFixed(1)} ${cx.toFixed(1)},${p[1].toFixed(1)} ${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+      }).join(' ');
+
+      const band = hiPt.length > 1 ? `${curve(hiPt)} ${loPt.map(p => `L${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ')} Z` : '';
+
+      const gridLines = ticks.map(t => {
+        const y = yOf(t);
+        const label = t >= 1000 ? (t / 1000).toFixed(t % 1000 === 0 ? 0 : 1) + 'k' : t % 1 !== 0 ? t.toFixed(1) : String(t);
+        return `<line x1="${left}" x2="${w - right}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(0,0,0,0.06)" stroke-width="1.2"/>
+            <text x="${left - 10}" y="${(y + 4).toFixed(1)}" text-anchor="end" fill="${C.text}" font-size="12" font-family="Space Mono">${label}</text>`;
+      }).join('');
+
+      const xLabels = monthNames.map((lab, i) => {
+        return `<text x="${xOf(i).toFixed(1)}" y="${top + ch + 28}" text-anchor="middle" fill="${C.text}" font-size="12">${lab}</text>`;
+      }).join('');
+
+      return `<svg class="chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <linearGradient id="bandFillG" x1="0" x2="1"><stop stop-color="${C.orange}" stop-opacity=".18"/><stop offset="1" stop-color="${C.orange}" stop-opacity=".06"/></linearGradient>
+      <filter id="cGlow2"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    ${gridLines}${xLabels}
+    <line x1="${left}" x2="${w - right}" y1="${top + ch}" y2="${top + ch}" stroke="${C.line}"/>
+    ${band ? `<path d="${band}" fill="url(#bandFillG)"/>` : ''}
+    <path d="${curve(apt)}" fill="none" stroke="${C.teal}" stroke-width="2.5" stroke-linecap="round" filter="url(#cGlow2)"/>
+    ${apt.map(([x, y], i) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5" fill="${C.teal}" stroke="${C.bg}" stroke-width="1.8"><title>${monthNames[i]}: ${actual[i]}</title></circle>`).join('')}
+    ${fpt.length > 1 ? `<path d="${curve(fpt)}" fill="none" stroke="${C.orange}" stroke-width="2.5" stroke-dasharray="8 5" stroke-linecap="round"/>` : ''}
+    ${fpt.map(([x, y], i) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5" fill="${C.orange}" stroke="${C.bg}" stroke-width="1.8"><title>${monthNames[i + splitAt]}: ${forecast[i]} (Forecast)</title></circle>`).join('')}
+    <line x1="${xOf(splitAt).toFixed(1)}" x2="${xOf(splitAt).toFixed(1)}" y1="${top + 16}" y2="${top + ch - 10}" stroke="#ffb830" stroke-width="1.5" stroke-dasharray="5 4" opacity=".7"/>
+    <text x="${(xOf(splitAt) + 6).toFixed(1)}" y="${top + 30}" fill="#ffb830" font-size="12" font-weight="700" font-family="Space Mono">NOW</text>
+  </svg>`;
+    }
+
+    // ─── GROUPED BARS (Forecast page) ───
+
+    function groupedBars() {
+      const w = 1100, h = 260, left = 100, right = 20, top = 24, bottom = 42, max = 2500;
+      const labels = [monthLabel(0), monthLabel(1), monthLabel(2)];
+      const forecast = [1880 + seededValue(9, 40, 180), 1980 + seededValue(10, 60, 210), 1850 + seededValue(11, 30, 180)];
+      const actual = [1760 + seededValue(12, 30, 160), 1860 + seededValue(13, 40, 190), 1900 + seededValue(14, 30, 160)];
+      const cw = w - left - right, ch = h - top - bottom;
+      const grid = [0, 500, 1000, 1500, 2000, 2500].map(v => {
+        const y = top + ch - (v / max) * ch;
+        return `<line x1="${left}" x2="${w - right}" y1="${y}" y2="${y}" stroke="${C.gridLine}"/>
+            <text x="${left - 10}" y="${y + 5}" text-anchor="end" fill="${C.text}" font-size="12" font-family="Space Mono">${v.toLocaleString()}</text>`;
+      }).join('');
+      const bars = labels.map((lab, i) => {
+        const gx = left + (cw / 3) * i + 24, bw = 120, gap = 10;
+        const fy = top + ch - (forecast[i] / max) * ch, ay = top + ch - (actual[i] / max) * ch;
+        return `<g>
+      <text x="${gx + bw / 2}" y="${fy - 7}" text-anchor="middle" fill="${C.text}" font-size="12" font-family="Space Mono">${forecast[i].toLocaleString()}</text>
+      <text x="${gx + bw + gap + bw / 2}" y="${ay - 7}" text-anchor="middle" fill="${C.text}" font-size="12" font-family="Space Mono">${actual[i].toLocaleString()}</text>
+      <rect x="${gx}" y="${fy}" width="${bw}" height="${top + ch - fy}" rx="10" fill="${C.orange}" opacity=".85" data-value="${forecast[i]} kWh (Forecast)"/>
+      <rect x="${gx + bw + gap}" y="${ay}" width="${bw}" height="${top + ch - ay}" rx="10" fill="${C.teal}" opacity=".85" data-value="${actual[i]} kWh (Actual)"/>
+      <text x="${gx + bw + gap / 2}" y="${top + ch + 28}" text-anchor="middle" fill="${C.text}" font-size="14" font-weight="600">${lab}</text>
+    </g>`;
+      }).join('');
+      return `<svg class="chart" viewBox="0 0 ${w} ${h}">${grid}${bars}</svg>`;
+    }
+
+    // ─── VERTICAL BARS (generic helper) ───
+
+    function verticalBars({ values, labels, max, ticks, color, height = 300 }) {
+      const w = 1100, h = height, left = 80, right = 24, top = 18, bottom = 42, cw = w - left - right, ch = h - top - bottom;
+      const bw = Math.min(56, cw / values.length * .7);
+      const grid = ticks.map(v => {
+        const y = top + ch - (v / max) * ch;
+        return `<line x1="${left}" x2="${w - right}" y1="${y}" y2="${y}" stroke="${C.gridLine}"/>
+            <text x="${left - 10}" y="${y + 5}" text-anchor="end" fill="${C.text}" font-size="12" font-family="Space Mono">${v.toLocaleString()}</text>`;
+      }).join('');
+      const bars = values.map((v, i) => {
+        const x = left + (cw / values.length) * i + (cw / values.length - bw) / 2, y = top + ch - (v / max) * ch;
+        return `<rect x="${x}" y="${y}" width="${bw}" height="${top + ch - y}" rx="6" fill="${color}" opacity=".8" data-value="${labels[i]}: ${v.toLocaleString()}"/>
+            <text x="${x + bw / 2}" y="${top + ch + 24}" text-anchor="middle" fill="${C.text}" font-size="12">${labels[i]}</text>`;
+      }).join('');
+      return `<svg class="chart" viewBox="0 0 ${w} ${h}">${grid}${bars}</svg>`;
+    }
+
+    // ═══ js/pie.js ═══
+    // ─── PIE CHART & APPLIANCE LIST ───
+
+
+
+    let pieHoverIdx = -1;
+
+    const pieItems = () => {
+      const items = [
+        ['Air Conditioner', '#00c48c', 34 + seededValue(70, -2, 5)],
+        ['Water Heater', '#ff7a45', 17 + seededValue(71, -2, 4)],
+        ['Refrigerator', '#4f8fff', 13 + seededValue(72, -1, 3)],
+        ['Washer/Dryer', '#ffb830', 11 + seededValue(73, -1, 3)]
+      ];
+      const used = items.reduce((sum, item) => sum + item[2], 0);
+      items.push(['Other', '#c5c9d6', Math.max(8, 100 - used)]);
+      return items;
+    };
+
+    function drawPieChart(hoverIdx = -1) {
+      const canvas = document.getElementById('pieChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const items = pieItems();
+      const total = items.reduce((s, it) => s + it[2], 0);
+      const cx = canvas.width / 2, cy = canvas.height / 2, outerR = 62, innerR = 40;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      let startAngle = -Math.PI / 2;
+      items.forEach((item, i) => {
+        const slice = (item[2] / total) * Math.PI * 2;
+        const isHover = i === hoverIdx;
+        const pull = isHover ? 6 : 0;
+        const midAngle = startAngle + slice / 2;
+        const ox = Math.cos(midAngle) * pull, oy = Math.sin(midAngle) * pull;
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, outerR, startAngle, startAngle + slice);
+        ctx.arc(cx, cy, innerR, startAngle + slice, startAngle, true);
+        ctx.closePath();
+        ctx.fillStyle = item[1];
+        ctx.globalAlpha = isHover ? 1 : 0.88;
+        ctx.fill();
+        if (isHover) {
+          ctx.shadowColor = item[1];
+          ctx.shadowBlur = 14;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+        ctx.globalAlpha = 1;
+        startAngle += slice;
+      });
+    }
+
+    function renderAppliances() {
+      const list = document.querySelector('.appliance-list');
+      if (!list) return;
+      const items = pieItems();
+      list.innerHTML = items.map((item, idx) => `
+    <div class="appliance-row" data-pie-idx="${idx}" data-value="${item[0]}: ${item[2]}%">
+      <span class="dot" style="background:${item[1]}"></span>
+      <span>${item[0]}</span><strong>${item[2]}%</strong>
+    </div>`).join('');
+      drawPieChart(-1);
+
+      const canvas = document.getElementById('pieChart');
+      if (!canvas) return;
+
+      // Pie → List linking
+      canvas.onmousemove = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const my = (e.clientY - rect.top) * (canvas.height / rect.height);
+        const cx = canvas.width / 2, cy = canvas.height / 2;
+        const dx = mx - cx, dy = my - cy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 40 || dist > 70) {
+          if (pieHoverIdx !== -1) { pieHoverIdx = -1; drawPieChart(-1); highlightRow(-1); }
+          document.getElementById('chartTooltip').style.display = 'none';
+          return;
+        }
+        let angle = Math.atan2(dy, dx) - (-Math.PI / 2);
+        if (angle < 0) angle += Math.PI * 2;
+        const total = items.reduce((s, it) => s + it[2], 0);
+        let start = 0, found = -1;
+        items.forEach((item, i) => {
+          const slice = (item[2] / total) * Math.PI * 2;
+          if (angle >= start && angle < start + slice) found = i;
+          start += slice;
+        });
+        if (found !== pieHoverIdx) {
+          pieHoverIdx = found;
+          drawPieChart(found);
+          highlightRow(found);
+          if (found !== -1) {
+            const tooltip = document.getElementById('chartTooltip');
+            tooltip.textContent = `${items[found][0]}: ${items[found][2]}%`;
+            tooltip.style.display = 'block';
+          }
+        }
+      };
+      canvas.onmouseleave = () => {
+        pieHoverIdx = -1;
+        drawPieChart(-1);
+        highlightRow(-1);
+        document.getElementById('chartTooltip').style.display = 'none';
+      };
+
+      // List → Pie linking
+      document.querySelectorAll('.appliance-row[data-pie-idx]').forEach(row => {
+        row.addEventListener('mouseenter', () => {
+          const idx = parseInt(row.dataset.pieIdx);
+          pieHoverIdx = idx;
+          drawPieChart(idx);
+          highlightRow(idx);
+        });
+        row.addEventListener('mouseleave', () => {
+          pieHoverIdx = -1;
+          drawPieChart(-1);
+          highlightRow(-1);
+        });
+      });
+
+      function highlightRow(idx) {
+        document.querySelectorAll('.appliance-row[data-pie-idx]').forEach(r => {
+          const i = parseInt(r.dataset.pieIdx);
+          r.style.opacity = idx === -1 ? '1' : (i === idx ? '1' : '0.4');
+          r.style.transform = i === idx ? 'translateX(4px)' : '';
+          r.style.transition = 'opacity .2s, transform .2s';
+        });
+      }
+    }
+
+    // ═══ js/heatmap.js ═══
+    // ─── HEAT MAP ───
+
+
+
+    function renderHeat() {
+      const colors = ['#E6F7ED', '#A7F3D0', '#FDE68A', '#ffb830', '#ff4d6a'];
+      const heat = Array.from({ length: 24 }, (_, hour) => {
+        const base = hour < 6 ? 0.7 : hour < 11 ? 2.2 : hour < 17 ? 3.4 : hour < 22 ? 4.2 : 2.4;
+        const value = Math.max(0.4, Math.min(5.8, base + seededValue(hour + 20, -9, 9) / 10));
+        const level = Math.min(4, Math.max(0, Math.floor(value / 1.2)));
+        return { value, color: colors[level], level };
+      });
+
+      const container = document.getElementById('heatMapCanvas');
+      if (!container) return;
+
+      let html = '<div class="heatmap-row">';
+      heat.forEach((h, i) => {
+        const label = String(i).padStart(2, '0');
+        html += `<div class="hm-square-wrap" data-hm-value="${label}:00 — avg ${h.value.toFixed(1)} kWh">
+      <div class="hm-square" style="background:${h.color};"></div>
+      <span class="hm-label">${label}</span>
+    </div>`;
+      });
+      html += '</div>';
+      container.innerHTML = html;
+
+      // Hover events
+      container.querySelectorAll('.hm-square-wrap').forEach(cell => {
+        cell.addEventListener('mouseenter', (e) => {
+          const tooltip = document.getElementById('chartTooltip');
+          tooltip.textContent = cell.dataset.hmValue;
+          tooltip.style.display = 'block';
+          cell.querySelector('.hm-square').classList.add('hm-hover');
+        });
+        cell.addEventListener('mouseleave', () => {
+          document.getElementById('chartTooltip').style.display = 'none';
+          cell.querySelector('.hm-square').classList.remove('hm-hover');
+        });
+      });
+    }
+
+    // ═══ js/billing.js ═══
+    // ─── BILLING ───
+
+
+
+
+    // ─── HORIZONTAL BARS (Billing History) ───
+
+    function horizontalBars() {
+      const isDaily = state.period === 'daily';
+      const isOverview = state.period === 'overview';
+
+      let rowCount, labels, bills, activeIdx, trendLabel;
+
+      if (isDaily) {
+        rowCount = 24;
+        labels = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0') + ':00');
+        bills = Array.from({ length: 24 }, (_, i) => {
+          const base = i < 6 ? 2 : i < 9 ? 18 : i < 12 ? 28 : i < 14 ? 22 : i < 18 ? 30 : i < 22 ? 38 : 10;
+          return Math.round((base + seededValue(i + 500, -5, 8)));
+        });
+        activeIdx = new Date().getHours();
+        trendLabel = `${String(dateState.day).padStart(2, '0')} ${monthNames[dateState.month]} ${dateState.year} — hourly`;
+      } else if (isOverview) {
+        rowCount = 12;
+        labels = monthNames;
+        bills = Array.from({ length: 12 }, (_, i) => {
+          const base = [4820, 5310, 4590, 5640, 6120, 7240, 6890, 6240, 5760, 6430, 5980, 5120][i];
+          return base + seededValue(i + 40, -260, 320);
+        });
+        activeIdx = dateState.month;
+        trendLabel = `${dateState.year} — 12-month trend`;
+      } else {
+        rowCount = daysInMonth(dateState.month, dateState.year);
+        labels = Array.from({ length: rowCount }, (_, i) => String(i + 1).padStart(2, '0'));
+        bills = Array.from({ length: rowCount }, (_, i) => {
+          const base = 120 + (i % 7) * 18;
+          return base + seededValue(i + 40, 10, 90);
+        });
+        activeIdx = dateState.day - 1;
+        trendLabel = `${monthNames[dateState.month]} ${dateState.year} — daily trend`;
+      }
+
+      const maxVal = Math.max(...bills);
+      const avg = Math.round(bills.reduce((a, b) => a + b, 0) / bills.length);
+      const unit = isDaily ? '฿/hr' : '฿';
+
+      const sw = 120, sh = 28, spad = 6;
+      const spts = bills.map((v, i) => {
+        const x = spad + (sw - spad * 2) * i / (bills.length - 1);
+        const y = spad + (sh - spad * 2) * (1 - (v - Math.min(...bills)) / (maxVal - Math.min(...bills)));
+        return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(' ');
+
+      const rows = bills.map((v, i) => {
+        const pct = v / maxVal;
+        const isActive = i === activeIdx;
+        const isHigh = v === maxVal;
+        const barColor = isActive ? C.teal : isHigh ? '#f87171' : '#93c5fd';
+        const barAlpha = isActive ? '1' : isHigh ? '0.85' : '0.6';
+        const textColor = isActive ? C.teal : isHigh ? '#dc2626' : 'var(--sub)';
+        const bgColor = isActive ? 'rgba(59,130,246,0.04)' : 'transparent';
+        const pctOfAvg = Math.round((v / avg - 1) * 100);
+        const trend = pctOfAvg >= 0 ? `+${pctOfAvg}%` : `${pctOfAvg}%`;
+        const trendColor = pctOfAvg > 10 ? '#dc2626' : pctOfAvg < -5 ? '#16a34a' : 'var(--muted)';
+        return `
+      <div style="display:grid;grid-template-columns:52px 1fr 80px 60px;align-items:center;gap:10px;
+                  padding:6px 20px 6px 16px;background:${bgColor};
+                  border-left:3px solid ${isActive ? C.teal : 'transparent'};
+                  transition:background .15s;"
+           onmouseover="this.style.background='rgba(59,130,246,0.04)'"
+           onmouseout="this.style.background='${bgColor}'">
+        <span style="font-family:var(--mono);font-size:11px;font-weight:700;color:${textColor};text-align:right;">${labels[i]}</span>
+        <div style="position:relative;height:10px;background:var(--line2);border-radius:99px;overflow:hidden;">
+          <div style="position:absolute;left:0;top:0;height:100%;width:${(pct * 100).toFixed(1)}%;
+                      background:${barColor};opacity:${barAlpha};border-radius:99px;
+                      transition:width .4s cubic-bezier(.4,0,.2,1);"></div>
+        </div>
+        <span style="font-family:var(--mono);font-size:12px;font-weight:700;color:${textColor};text-align:right;white-space:nowrap;">${v.toLocaleString()} ${unit}</span>
+        <span style="font-size:11px;font-weight:700;color:${trendColor};text-align:right;">${trend}</span>
+      </div>`;
+      }).join('');
+
+      const avgY = spad + (sh - spad * 2) * (1 - (avg - Math.min(...bills)) / (maxVal - Math.min(...bills)));
+      const activeCx = spad + (sw - spad * 2) * Math.min(activeIdx, bills.length - 1) / Math.max(bills.length - 1, 1);
+      const activeCy = spad + (sh - spad * 2) * (1 - (bills[Math.min(activeIdx, bills.length - 1)] - Math.min(...bills)) / (maxVal - Math.min(...bills)));
+
+      const header = `
+    <div style="display:grid;grid-template-columns:52px 1fr 80px 60px;align-items:center;gap:10px;
+                padding:6px 20px 10px 16px;border-bottom:1px solid var(--line2);margin-bottom:4px;">
+      <span></span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <svg viewBox="0 0 ${sw} ${sh}" style="width:${sw}px;height:${sh}px;flex-shrink:0;">
+          <line x1="${spad}" x2="${sw - spad}" y1="${avgY.toFixed(1)}" y2="${avgY.toFixed(1)}" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3 2"/>
+          <path d="${spts}" fill="none" stroke="${C.teal}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="${activeCx.toFixed(1)}" cy="${activeCy.toFixed(1)}" r="3" fill="${C.teal}" stroke="#fff" stroke-width="1.5"/>
+        </svg>
+        <span style="font-size:10px;color:var(--muted);font-weight:600;">${trendLabel}</span>
+      </div>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--muted);text-align:right;">Amount</span>
+      <span style="font-size:10px;color:var(--muted);text-align:right;">vs avg</span>
+    </div>`;
+
+      const footer = `
+    <div style="padding:10px 20px 14px 16px;border-top:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+      <span style="font-size:11px;color:var(--muted);font-weight:600;">Average</span>
+      <span style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink);">${avg.toLocaleString()} ${unit}</span>
+    </div>`;
+
+      document.getElementById('dailyBillBars').innerHTML = header + rows + footer;
+    }
+
+    // ─── YEARLY BARS ───
+
+    function yearlyBars() {
+      const values = [71000, 69000, 70500, 71500, 65500, 70000, 68000, 72000, 69000, 71000, 70500, 59000]
+        .map((v, i) => v + seededValue(i + 60, -2200, 2600));
+      return verticalBars({ values, labels: monthNames, max: 80000, ticks: [0, 20000, 40000, 60000, 80000], color: C.teal, height: 300 });
+    }
+
+    // ─── BILLING DETAILS ───
+
+    function renderBillingDetails() {
+      const billingRows = document.getElementById('billingDetailsRows');
+      const usageRows = document.getElementById('billingUsageRows');
+      if (!billingRows || !usageRows) return;
+
+      const isDaily = state.period === 'daily';
+
+      const totalKwh = isDaily
+        ? Math.round(50 + seededValue(5, -15, 25))
+        : (1700 + seededValue(5, 50, 260));
+
+      const energyCost = isDaily ? Math.round(totalKwh * 4.2) : (4800 + seededValue(31, 200, 900));
+      const ftRate = isDaily ? Math.round(totalKwh * 0.39) : (350 + seededValue(32, 10, 60));
+      const vat = Math.round((energyCost + ftRate) * 0.07);
+      const netTotal = energyCost + ftRate + vat;
+      const avgDaily = (totalKwh / daysInMonth(dateState.month, dateState.year)).toFixed(1);
+
+      const t1 = Math.min(totalKwh, 150);
+      const t2 = Math.min(Math.max(totalKwh - 150, 0), 250);
+      const t3 = Math.max(totalKwh - 400, 0);
+      const c1 = (t1 * 3.2484).toFixed(2);
+      const c2 = (t2 * 4.2218).toFixed(2);
+      const c3 = (t3 * 4.4217).toFixed(2);
+      const svcFee = (38 + seededValue(35, 0, 3)).toFixed(2);
+
+      const peakDay = 1 + Math.abs(seededValue(108, 0, daysInMonth(dateState.month, dateState.year) * 7)) % daysInMonth(dateState.month, dateState.year);
+      const peakHour = String(18 + Math.abs(seededValue(107, 0, 5))).padStart(2, '0') + ':00';
+      const pf = (0.92 + (seededValue(104, 0, 40) / 1000)).toFixed(2);
+      const voltage = 220 + seededValue(105, 0, 20);
+
+      if (isDaily) {
+        billingRows.innerHTML = `
+      <div class="bill-row"><span>0–150 kWh<small>3.2484 Baht/kWh</small></span><span class="bill-amount">${energyCost.toLocaleString()} ฿</span></div>
+      <div class="bill-row"><span>151–400 kWh<small>4.2218 Baht/kWh</small></span><span class="bill-amount">${ftRate.toFixed(2)} ฿</span></div>
+      <div class="bill-row"><span>>400 kWh<small>4.4217 Baht/kWh</small></span><span class="bill-amount">${vat.toLocaleString()} ฿</span></div>
+      <div class="bill-row total"><span>Energy Cost</span><span class="bill-amount">${netTotal.toLocaleString()} ฿</span></div>`;
+      } else {
+        billingRows.innerHTML = `
+      <div class="bill-row"><span>0–150 kWh<small>3.2484 Baht/kWh</small></span><span class="bill-amount">${parseFloat(c1).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ฿</span></div>
+      <div class="bill-row"><span>151–400 kWh<small>4.2218 Baht/kWh</small></span><span class="bill-amount">${parseFloat(c2).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ฿</span></div>
+      <div class="bill-row"><span>&gt;400 kWh<small>4.4217 Baht/kWh</small></span><span class="bill-amount">${parseFloat(c3).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ฿</span></div>
+      <div class="bill-row"><span>Service Fee</span><span class="bill-amount">${svcFee} ฿</span></div>
+      <div class="bill-row"><span>FT Rate</span><span class="bill-amount">${ftRate.toFixed(2)} ฿</span></div>
+      <div class="bill-row"><span>VAT 7%</span><span class="bill-amount">${vat.toLocaleString()} ฿</span></div>
+      <div class="bill-row total"><span>Net Total</span><span class="bill-amount">${netTotal.toLocaleString()} ฿</span></div>`;
+      }
+
+      usageRows.innerHTML = `
+    <div class="bill-row"><span>${isDaily ? 'Energy' : 'Energy'} (kWh)</span><span class="bill-amount">${totalKwh.toLocaleString()} kWh</span></div>
+    ${isDaily ? '' : `<div class="bill-row"><span>Avg. Daily Usage</span><span class="bill-amount">${avgDaily} kWh</span></div>`}
+    ${isDaily ? '' : `<div class="bill-row"><span>Peak Day</span><span class="bill-amount">${String(peakDay).padStart(2, '0')} ${monthNames[dateState.month]}</span></div>`}
+    <div class="bill-row"><span>Peak Hour</span><span class="bill-amount">${peakHour}</span></div>
+    <div class="bill-row"><span>Power Factor</span><span class="bill-amount">${pf}</span></div>
+    <div class="bill-row"><span>Avg. Voltage</span><span class="bill-amount">${voltage} V</span></div>
+    ${isDaily ? '' : '<div class="bill-row" style="min-height:54px;"></div>'}`;
+    }
+
+    // ─── FORECAST ACCURACY ───
+
+    function updateForecastAccuracy() {
+      const badge = document.getElementById('forecastAccuracy');
+      if (!badge) return;
+      const accuracy = 75 + Math.abs(seededValue(400, 0, 20));
+      badge.textContent = `Accuracy ${accuracy}%`;
+    }
+
+    // ═══ js/alerts.js ═══
+    // ─── ALERTS ───
+
+
+
+    function renderAlerts() {
+      const alertDB = [
+        { time: '02:14', topic: 'Voltage Drop', description: 'Average voltage dropped below 200V during off-peak hours', severity: '<span class="pill warning">⚠ Warning</span>' },
+        { time: '04:00', topic: 'Overload', description: 'Air conditioner current exceeded the normal operating range', severity: '<span class="pill critical">✕ Critical</span>' },
+        { time: '07:32', topic: 'High Consumption', description: 'Energy consumption is 25% above the expected baseline', severity: '<span class="pill warning">⚠ Warning</span>' },
+        { time: '10:55', topic: 'Power Surge', description: 'Sudden voltage spike detected on circuit 2', severity: '<span class="pill critical">✕ Critical</span>' },
+        { time: '13:20', topic: 'Power Factor Low', description: 'Power factor fell below 0.85 — check reactive load', severity: '<span class="pill warning">⚠ Warning</span>' },
+        { time: '15:45', topic: 'Phase Imbalance', description: 'Significant imbalance detected between phases A and B', severity: '<span class="pill critical">✕ Critical</span>' },
+        { time: '19:10', topic: 'Peak Hour Alert', description: 'Entering peak billing period — consider load shifting', severity: '<span class="pill warning">⚠ Warning</span>' },
+        { time: '21:00', topic: 'Overcurrent', description: 'Main circuit breaker rated current exceeded by 12%', severity: '<span class="pill critical">✕ Critical</span>' },
+        { time: '00:30', topic: 'Harmonic Distortion', description: 'THD exceeds 8% threshold on the main distribution board', severity: '<span class="pill warning">⚠ Warning</span>' },
+        { time: '06:15', topic: 'Temperature High', description: 'Panel temperature sensor reading above 45°C threshold', severity: '<span class="pill critical">✕ Critical</span>' },
+      ];
+      let rows = [];
+      if (state.period === 'daily') {
+        const count = 2 + (seededValue(300, 0, 10) > 6 ? 1 : 0);
+        for (let i = 0; i < count; i++) {
+          const idx = Math.abs(seededValue(301 + i, 0, alertDB.length * 7)) % alertDB.length;
+          const alert = alertDB[idx];
+          rows.push({ date: selectedDate(), time: alert.time, topic: alert.topic, description: alert.description, severity: alert.severity });
+        }
+      } else if (state.period === 'monthly') {
+        const count = 3 + (seededValue(310, 0, 10) > 5 ? 1 : 0);
+        for (let i = 0; i < count; i++) {
+          const day = 1 + Math.abs(seededValue(311 + i * 3, 0, daysInMonth(dateState.month, dateState.year) * 7)) % daysInMonth(dateState.month, dateState.year);
+          const dateStr = `${String(day).padStart(2, '0')} ${monthNames[dateState.month]} ${dateState.year}`;
+          const idx = Math.abs(seededValue(312 + i * 7, 0, alertDB.length * 7)) % alertDB.length;
+          const alert = alertDB[idx];
+          rows.push({ date: dateStr, time: alert.time, topic: alert.topic, description: alert.description, severity: alert.severity });
+        }
+        rows.sort((a, b) => parseInt(a.date) - parseInt(b.date));
+      } else {
+        const count = 4 + (seededValue(320, 0, 10) > 5 ? 1 : 0);
+        for (let i = 0; i < count; i++) {
+          const mon = Math.abs(seededValue(321 + i * 3, 0, 12 * 7)) % 12;
+          const day = 1 + Math.abs(seededValue(322 + i * 5, 0, 28 * 7)) % 28;
+          const dateStr = `${String(day).padStart(2, '0')} ${monthNames[mon]} ${dateState.year}`;
+          const idx = Math.abs(seededValue(323 + i * 7, 0, alertDB.length * 7)) % alertDB.length;
+          const alert = alertDB[idx];
+          rows.push({ date: dateStr, time: alert.time, topic: alert.topic, description: alert.description, severity: alert.severity });
+        }
+      }
+      document.querySelector('#alertRows').innerHTML = rows.map(row => `
+    <tr>
+      <td>${row.date}</td><td>${row.time}</td><td>${row.topic}</td><td>${row.description}</td><td>${row.severity}</td>
+    </tr>`).join('');
+    }
+
+    // ═══ js/realtime.js ═══
+    // ─── REAL-TIME PAGE ───
+
+
+
+
+    const rtState = {
+      power: [], voltage: [], current: [], pf: [],
+      ticker: null, t: 0, appliance: 'total'
+    };
+
+    const rtProfiles = {
+      total: { pBase: 0.72, pAmp: 0.18, vBase: 230, vAmp: 5, pfBase: 0.94, pfAmp: 0.04, label: 'Total House' },
+      ac: { pBase: 1.20, pAmp: 0.30, vBase: 230, vAmp: 4, pfBase: 0.90, pfAmp: 0.05, label: 'Air Conditioner' },
+      heater: { pBase: 2.50, pAmp: 0.15, vBase: 228, vAmp: 6, pfBase: 0.98, pfAmp: 0.01, label: 'Water Heater' },
+      fridge: { pBase: 0.15, pAmp: 0.08, vBase: 230, vAmp: 3, pfBase: 0.65, pfAmp: 0.10, label: 'Refrigerator' },
+      washer: { pBase: 0.50, pAmp: 0.40, vBase: 229, vAmp: 5, pfBase: 0.88, pfAmp: 0.06, label: 'Washer/Dryer' }
+    };
+
+    const RT_LEN = 60;
+
+    function rtNextValues() {
+      const t = rtState.t++;
+      const p = rtProfiles[rtState.appliance] || rtProfiles.total;
+      const power = parseFloat((p.pBase + p.pAmp * Math.sin(t / 8) + (Math.random() - 0.5) * 0.1).toFixed(3));
+      const voltage = parseFloat((p.vBase + p.vAmp * Math.sin(t / 12) + (Math.random() - 0.5) * 3).toFixed(1));
+      const pf = parseFloat(Math.min(1.00, Math.max(0.60, p.pfBase + Math.sin(t / 10) * p.pfAmp + (Math.random() - 0.5) * 0.02)).toFixed(3));
+      const current = parseFloat((power * 1000 / (voltage * pf)).toFixed(3));
+      return { power, voltage, current, pf };
+    }
+
+    function pushRt(series, value) {
+      series.push(value);
+      if (series.length > RT_LEN) series.shift();
+    }
+
+    function drawRtCanvas(canvasId, data, color, minVal, maxVal, unit) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio || 800;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      if (data.length < 2) return;
+
+      if (minVal === null || maxVal === null) {
+        const dataMin = Math.min(...data);
+        const dataMax = Math.max(...data);
+        const spread = dataMax - dataMin || Math.abs(dataMax) * 0.1 || 1;
+        minVal = dataMin - spread * 0.15;
+        maxVal = dataMax + spread * 0.15;
+      }
+
+      const pad = { l: 0, r: 0, t: 8, b: 8 };
+      const range = maxVal - minVal || 1;
+      const xOf = i => pad.l + (w - pad.l - pad.r) * i / (RT_LEN - 1);
+      const yOf = v => pad.t + (h - pad.t - pad.b) * (1 - (v - minVal) / range);
+
+      ctx.strokeStyle = 'rgba(0,0,0,0.05)'; ctx.lineWidth = 1;
+      for (let i = 0; i <= 4; i++) {
+        const y = yOf(minVal + (range * i / 4));
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+      }
+
+      const gradient = ctx.createLinearGradient(0, 0, 0, h);
+      gradient.addColorStop(0, color + '44');
+      gradient.addColorStop(1, color + '00');
+      ctx.beginPath();
+      data.forEach((v, i) => { const offset = RT_LEN - data.length; const x = xOf(i + offset), y = yOf(v); i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+      ctx.lineTo(xOf(RT_LEN - 1), h);
+      ctx.lineTo(xOf(RT_LEN - data.length), h);
+      ctx.closePath(); ctx.fillStyle = gradient; ctx.fill();
+
+      ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2 * window.devicePixelRatio; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      data.forEach((v, i) => { const offset = RT_LEN - data.length; const x = xOf(i + offset), y = yOf(v); i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+      ctx.stroke();
+
+      const last = data[data.length - 1];
+      const lx = xOf(RT_LEN - 1), ly = yOf(last);
+      ctx.beginPath(); ctx.arc(lx, ly, 4 * window.devicePixelRatio, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2 * window.devicePixelRatio; ctx.stroke();
+    }
+
+    function updateRtMetrics() {
+      const pw = rtState.power, vt = rtState.voltage, cu = rtState.current, pf = rtState.pf;
+      if (!pw.length) return;
+      const last = v => v[v.length - 1];
+      const pwrVal = last(pw).toFixed(2), pfVal = last(pf).toFixed(3), vtVal = last(vt).toFixed(1), cuVal = last(cu).toFixed(2);
+      const pwrS = getStatusInfo('power', pwrVal), pfS = getStatusInfo('pf', pfVal), vtS = getStatusInfo('voltage', vtVal);
+
+      document.getElementById('realtimeMetrics').innerHTML = [
+        metric({ title: "Live Power", value: pwrVal, unit: "kW", status: { text: pwrS.text }, statusCls: pwrS.cls }),
+        metric({ title: "Live Voltage", value: vtVal, unit: "V", status: { text: vtS.text }, statusCls: vtS.cls }),
+        metric({ title: "Live Current", value: cuVal, unit: "A", status: { text: "Running" }, statusCls: 'stable' }),
+        metric({ title: "Power Factor", value: pfVal, unit: "", status: { text: pfS.text }, statusCls: pfS.cls }),
+      ].join('');
+      document.getElementById('rtPowerBadge').textContent = `${pwrVal} kW`;
+      document.getElementById('rtVoltageBadge').textContent = `${vtVal} V`;
+      document.getElementById('rtCurrentBadge').textContent = `${cuVal} A`;
+      document.getElementById('rtPFBadge').textContent = pfVal;
+    }
+
+    function updateRtCharts() {
+      drawRtCanvas('rtPowerChart', rtState.power, '#2d7ff9', null, null, 'kW');
+      drawRtCanvas('rtVoltageChart', rtState.voltage, '#00c48c', null, null, 'V');
+      drawRtCanvas('rtCurrentChart', rtState.current, '#ff7a45', null, null, 'A');
+      drawRtCanvas('rtPFChart', rtState.pf, '#9b8fff', null, null, '');
+    }
+
+    function startRealtime() {
+      if (rtState.ticker) return;
+      for (let i = 0; i < 30; i++) {
+        const v = rtNextValues();
+        pushRt(rtState.power, v.power); pushRt(rtState.voltage, v.voltage);
+        pushRt(rtState.current, v.current); pushRt(rtState.pf, v.pf);
+      }
+      updateRtMetrics(); updateRtCharts();
+      rtState.ticker = setInterval(() => {
+        if (state.page !== 'realtime') return;
+        const v = rtNextValues();
+        pushRt(rtState.power, v.power); pushRt(rtState.voltage, v.voltage);
+        pushRt(rtState.current, v.current); pushRt(rtState.pf, v.pf);
+        updateRtMetrics(); updateRtCharts(); updateCurrentDate();
+      }, 2000);
+    }
+
+    function stopRealtime() {
+      if (rtState.ticker) { clearInterval(rtState.ticker); rtState.ticker = null; }
+    }
+
+    // ═══ js/main.js ═══
+    // ─── MAIN ENTRY POINT ───
+
+
+
+
+
+
+
+
+
+
+
+    // ─── CHART STATE & RENDER ───
+
+    const chartState = { scaleMode: 'auto' };
+
+    function renderCharts() {
+      const dashValues = (state.period === 'daily'
+        ? [4.4, 4.9, 6.9, 9.9, 9.4, 5.8, 3, 6.8, 6.7, 1.8, 5.8, 3.5, 3, 5.1, 8, 7, 9, 2, 6, 4, 5.1, 7, 9, 7]
+        : state.period === 'overview'
+          ? [780, 820, 780, 785, 760, 815, 825, 780, 770, 900, 780, 760]
+          : [14, 65, 57, 70, 89, 26, 33, 62, 61, 72, 66, 31, 39, 35, 38, 27, 90, 92, 60, 45, 56, 78, 69, 72, 54, 39, 57, 61, 68, 78])
+        .map((v, i) => Math.max(1, Math.round((v + seededValue(i, -4, 5)) * 10) / 10));
+      const dashLabels = state.period === 'daily'
+        ? Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'))
+        : state.period === 'overview'
+          ? monthNames
+          : Array.from({ length: 30 }, (_, i) => String(i + 1));
+
+      const fixedMax = state.period === 'overview' ? 1000 : state.period === 'daily' ? 15 : 120;
+      const autoScale = chartState.scaleMode === 'auto';
+
+      document.querySelector('#dashboardTrend').innerHTML = lineChart({
+        values: dashValues, labels: dashLabels,
+        max: autoScale ? null : fixedMax,
+        fill: true, height: 300, autoScale
+      });
+
+      const scaleBtn = document.getElementById('scaleModeBtn');
+      if (scaleBtn) {
+        scaleBtn.textContent = autoScale ? '⇅ Auto Scale' : '⇅ Fixed Scale';
+        scaleBtn.style.background = autoScale ? 'rgba(29,111,232,.1)' : 'rgba(255,122,69,.1)';
+        scaleBtn.style.color = autoScale ? '#1d6fe8' : '#ff7a45';
+        scaleBtn.style.borderColor = autoScale ? 'rgba(29,111,232,.25)' : 'rgba(255,122,69,.25)';
+      }
+
+      document.querySelector('#forecastLine').innerHTML = forecastLineChart();
+      document.querySelector('#forecastBars').innerHTML = groupedBars();
+      horizontalBars();
+    }
+
+    // ─── MASTER VISIBILITY CONTROLLER ───
+
+    function updateVisibility() {
+      for (const key of Object.keys(pages)) {
+        document.querySelector(`#${key}Page`).classList.toggle('hidden', state.page !== key);
+      }
+      document.querySelector('#pageTitle').textContent = pages[state.page];
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.page === state.page));
+
+      const isRealtime = state.page === 'realtime';
+      const isProfile = state.page === 'profile';
+      document.getElementById('mainControls').classList.toggle('hidden', isRealtime || isProfile);
+
+      if (isRealtime) {
+        startRealtime();
+        updateCurrentDate();
+        return;
+      }
+      stopRealtime();
+
+      if (isProfile) { updateCurrentDate(); return; }
+
+      document.querySelectorAll('.segment button').forEach(b => b.classList.toggle('active', b.dataset.period === state.period));
+      document.querySelector('#dateControls').innerHTML = dateControls();
+      document.querySelector('#billOverview').classList.toggle('hidden', state.page === 'bill' && state.period === 'overview');
+      document.querySelector('#billYear').classList.toggle('hidden', state.page !== 'bill');
+      document.querySelector('#billYear').style.marginTop = (state.page === 'bill' && state.period === 'overview') ? '0' : '16px';
+      const billHistoryBadge = document.querySelector('#billHistoryBadge');
+      if (billHistoryBadge) billHistoryBadge.textContent = dateState.year;
+      updateCurrentDate();
+      setMetrics();
+      renderCharts();
+      renderHeat();
+      renderAppliances();
+      renderAlerts();
+      renderBillingDetails();
+      updateForecastAccuracy();
+    }
+
+    // ─── EVENT LISTENERS ───
+
+    // Navigation
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => { state.page = btn.dataset.page; updateVisibility(); });
+    });
+
+    // Period tabs
+    document.querySelectorAll('.segment button').forEach(btn => {
+      btn.addEventListener('click', () => { state.period = btn.dataset.period; updateVisibility(); });
+    });
+
+    // Scale mode toggle (replaces inline onclick in HTML)
+    const scaleModeBtn = document.getElementById('scaleModeBtn');
+    if (scaleModeBtn) {
+      scaleModeBtn.addEventListener('click', () => {
+        chartState.scaleMode = chartState.scaleMode === 'auto' ? 'fixed' : 'auto';
+        renderCharts();
+      });
+    }
+
+    // Click delegation: date pickers & RT appliance dropdown
+    document.addEventListener('click', e => {
+      // RT appliance dropdown
+      const rtItem = e.target.closest('[data-rt-app]');
+      if (rtItem) {
+        const app = rtItem.dataset.rtApp;
+        rtState.appliance = app;
+        rtState.power = []; rtState.voltage = []; rtState.current = []; rtState.pf = []; rtState.t = 0;
+        document.getElementById('rtSelectedApplianceLabel').textContent = rtProfiles[app]?.label || 'Total House';
+        document.querySelectorAll('#rtApplianceDropdownMenu .dropdown-item').forEach(d => d.classList.toggle('active', d.dataset.rtApp === app));
+        document.querySelectorAll('.select-pill.open').forEach(p => p.classList.remove('open'));
+        stopRealtime(); startRealtime();
+        return;
+      }
+
+      const pill = e.target.closest('.select-pill');
+      document.querySelectorAll('.select-pill.open').forEach(p => { if (p !== pill) p.classList.remove('open'); });
+      if (pill) { pill.classList.toggle('open'); e.stopPropagation(); }
+      const item = e.target.closest('.dropdown-item');
+      if (item && item.dataset.type) {
+        const type = item.dataset.type;
+        const val = parseInt(item.dataset.val);
+        dateState[type] = val;
+        if (type === 'month' || type === 'year') {
+          const maxDay = daysInMonth(dateState.month, dateState.year);
+          if (dateState.day > maxDay) dateState.day = maxDay;
+        }
+        document.querySelectorAll('.select-pill.open').forEach(p => p.classList.remove('open'));
+        updateVisibility();
+      }
+    });
+
+    // ─── TOOLTIP ───
+
+    const tooltip = document.getElementById('chartTooltip');
+    document.addEventListener('mouseover', e => {
+      const circle = e.target.closest('circle');
+      const rect = e.target.closest('rect[rx]');
+      if (circle?.querySelector('title')) {
+        tooltip.textContent = circle.querySelector('title').textContent;
+        tooltip.style.display = 'block';
+      } else if (rect?.dataset.value) {
+        tooltip.textContent = rect.dataset.value;
+        tooltip.style.display = 'block';
+      }
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (tooltip.style.display === 'block') {
+        const tw = tooltip.offsetWidth, th = tooltip.offsetHeight;
+        let tx = e.clientX + 14, ty = e.clientY - 34;
+        if (tx + tw > window.innerWidth - 8) tx = e.clientX - tw - 14;
+        if (ty < 4) ty = e.clientY + 16;
+        if (ty + th > window.innerHeight - 4) ty = window.innerHeight - th - 4;
+        tooltip.style.left = tx + 'px';
+        tooltip.style.top = ty + 'px';
+      }
+    });
+
+    document.addEventListener('mouseout', e => {
+      if (e.target.closest('circle') || e.target.closest('rect[rx]')) tooltip.style.display = 'none';
+    });
+
+    // ─── PROFILE & HOUSE MANAGEMENT ───
+
+    const profileState = {
+      user: {
+        firstName: 'Admin', lastName: 'User',
+        email: 'admin@enerlytix.com', phone: '',
+        initials: 'AD'
+      },
+      houses: [
+        { id: 1, emoji: '🏠', name: 'Main House',    address: '123 Sukhumvit Rd, Bangkok',    area: 180 },
+        { id: 2, emoji: '🏖', name: 'Beach House',   address: '88 Pattaya Beach Rd, Chonburi', area: 95  },
+        { id: 3, emoji: '🏡', name: 'Parents Home',  address: '45 Nimman Rd, Chiang Mai',      area: 220 },
+      ],
+      activeHouseId: 1,
+      nextId: 4,
+      selectedEmoji: '🏠'
+    };
+
+    function getActiveHouse() {
+      return profileState.houses.find(h => h.id === profileState.activeHouseId) || profileState.houses[0];
+    }
+
+    function syncSidebarUser() {
+      const u = profileState.user;
+      const el = document.getElementById('sidebarAvatar');
+      const nameEl = document.getElementById('sidebarUserName');
+      const profileAv = document.getElementById('profileAvatarLg');
+      const initials = (u.firstName[0] + (u.lastName[0] || '')).toUpperCase();
+      profileState.user.initials = initials;
+      if (el) el.textContent = initials;
+      if (nameEl) nameEl.textContent = u.firstName + ' ' + u.lastName;
+      if (profileAv) profileAv.textContent = initials;
+      const dn = document.getElementById('profileDisplayName');
+      const de = document.getElementById('profileDisplayEmail');
+      if (dn) dn.textContent = u.firstName + ' ' + u.lastName;
+      if (de) de.textContent = u.email;
+    }
+
+    function syncSidebarHouse() {
+      const h = getActiveHouse();
+      const hn = document.getElementById('sidebarHouseName');
+      const ha = document.getElementById('sidebarHouseAddr');
+      const pah = document.getElementById('profileActiveHouse');
+      if (hn) hn.textContent = h.name;
+      if (ha) ha.textContent = h.address;
+      if (pah) pah.textContent = h.name;
+    }
+
+    function renderSidebarDropdown() {
+      const container = document.getElementById('sidebarHouseDropdown');
+      if (!container) return;
+      container.innerHTML = profileState.houses.map(h => `
+        <div class="house-option ${h.id === profileState.activeHouseId ? 'active' : ''}" data-hid="${h.id}">
+          <div class="house-option-icon" style="background:rgba(29,111,232,.08)">${h.emoji}</div>
+          <div class="house-option-text">
+            <div class="ho-name">${h.name}</div>
+            <div class="ho-addr">${h.address}</div>
+          </div>
+          <svg class="house-option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+      `).join('') + `
+        <div class="house-add-btn" id="sidebarAddHouse">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add House
+        </div>`;
+    }
+
+    function renderHousesList() {
+      const container = document.getElementById('housesList');
+      if (!container) return;
+      container.innerHTML = profileState.houses.map(h => `
+        <div class="house-card ${h.id === profileState.activeHouseId ? 'selected' : ''}" data-select-house="${h.id}">
+          <div class="house-card-icon" style="background:rgba(29,111,232,.08);font-size:22px;">${h.emoji}</div>
+          <div class="house-card-info">
+            <div class="house-card-name">${h.name}</div>
+            <div class="house-card-meta">${h.address} · ${h.area} sq.m</div>
+          </div>
+          <div class="house-card-actions">
+            ${h.id === profileState.activeHouseId ? '<span class="house-card-selected-badge">Active</span>' : `<button class="btn-secondary" style="height:30px;font-size:11px;padding:0 12px;" onclick="setActiveHouse(${h.id})">Select</button>`}
+          </div>
+        </div>
+      `).join('');
+
+      const countBadge = document.getElementById('houseCountBadge');
+      const profileCount = document.getElementById('profileHouseCount');
+      if (countBadge) countBadge.textContent = profileState.houses.length;
+      if (profileCount) profileCount.textContent = profileState.houses.length;
+    }
+
+    function setActiveHouse(id) {
+      profileState.activeHouseId = id;
+      syncSidebarHouse();
+      renderSidebarDropdown();
+      renderHousesList();
+    }
+
+    function removeHouse(id) {
+      if (profileState.houses.length <= 1) return;
+      profileState.houses = profileState.houses.filter(h => h.id !== id);
+      if (profileState.activeHouseId === id) profileState.activeHouseId = profileState.houses[0].id;
+      syncSidebarHouse();
+      renderSidebarDropdown();
+      renderHousesList();
+    }
+
+    function openAddHouseModal() {
+      document.getElementById('modalHouseName').value = '';
+      document.getElementById('modalHouseAddr').value = '';
+      document.getElementById('modalHouseArea').value = '';
+      profileState.selectedEmoji = '🏠';
+      document.querySelectorAll('.emoji-opt').forEach(e => e.classList.toggle('selected', e.dataset.emoji === '🏠'));
+      document.getElementById('addHouseModal').classList.add('show');
+      document.getElementById('modalHouseName').focus();
+    }
+
+    function closeAddHouseModal() {
+      document.getElementById('addHouseModal').classList.remove('show');
+    }
+
+    // Sidebar house dropdown toggle
+    document.getElementById('houseSelectorPill')?.addEventListener('click', e => {
+      e.stopPropagation();
+      document.getElementById('houseSelectorPill').classList.toggle('open');
+    });
+
+    // Click inside sidebar dropdown
+    document.addEventListener('click', e => {
+      const pill = document.getElementById('houseSelectorPill');
+      if (pill && !pill.contains(e.target)) pill.classList.remove('open');
+
+      const hid = e.target.closest('[data-hid]')?.dataset.hid;
+      if (hid) { setActiveHouse(parseInt(hid)); pill?.classList.remove('open'); }
+
+      if (e.target.closest('#sidebarAddHouse')) { openAddHouseModal(); pill?.classList.remove('open'); }
+      if (e.target.closest('[data-select-house]') && !e.target.closest('button')) {
+        const sid = parseInt(e.target.closest('[data-select-house]').dataset.selectHouse);
+        setActiveHouse(sid);
+      }
+    });
+
+    // Add house button on profile page
+    document.getElementById('addHouseBtn')?.addEventListener('click', openAddHouseModal);
+    document.getElementById('modalCancelBtn')?.addEventListener('click', closeAddHouseModal);
+    document.getElementById('addHouseModal')?.addEventListener('click', e => {
+      if (e.target === document.getElementById('addHouseModal')) closeAddHouseModal();
+    });
+
+    // Emoji picker
+    document.getElementById('emojiPicker')?.addEventListener('click', e => {
+      const opt = e.target.closest('.emoji-opt');
+      if (!opt) return;
+      profileState.selectedEmoji = opt.dataset.emoji;
+      document.querySelectorAll('.emoji-opt').forEach(o => o.classList.toggle('selected', o === opt));
+    });
+
+    // Save modal
+    document.getElementById('modalSaveBtn')?.addEventListener('click', () => {
+      const name = document.getElementById('modalHouseName').value.trim();
+      const addr = document.getElementById('modalHouseAddr').value.trim();
+      const area = parseInt(document.getElementById('modalHouseArea').value) || 100;
+      if (!name) { document.getElementById('modalHouseName').focus(); return; }
+      profileState.houses.push({ id: profileState.nextId++, emoji: profileState.selectedEmoji, name, address: addr || 'ไม่ระบุที่อยู่', area });
+      closeAddHouseModal();
+      renderSidebarDropdown();
+      renderHousesList();
+    });
+
+    // Profile save
+    document.getElementById('profileSaveBtn')?.addEventListener('click', () => {
+      profileState.user.firstName = document.getElementById('pFirstName').value.trim() || profileState.user.firstName;
+      profileState.user.lastName  = document.getElementById('pLastName').value.trim()  || profileState.user.lastName;
+      profileState.user.email     = document.getElementById('pEmail').value.trim()     || profileState.user.email;
+      profileState.user.phone     = document.getElementById('pPhone').value.trim();
+      syncSidebarUser();
+    });
+
+    document.getElementById('profileCancelBtn')?.addEventListener('click', () => {
+      document.getElementById('pFirstName').value = profileState.user.firstName;
+      document.getElementById('pLastName').value  = profileState.user.lastName;
+      document.getElementById('pEmail').value     = profileState.user.email;
+      document.getElementById('pPhone').value     = profileState.user.phone;
+    });
+
+    // Logout
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+      const overlay = document.getElementById('loginOverlay');
+      overlay.style.transition = 'none';
+      overlay.style.opacity = '1';
+      overlay.style.transform = 'scale(1)';
+      overlay.classList.remove('hidden');
+      document.getElementById('loginPassword').value = '';
+    });
+
+    // Sidebar user row → go to profile
+    document.getElementById('sidebarUserRow')?.addEventListener('click', () => {
+      state.page = 'profile'; updateVisibility();
+    });
+
+    // Init
+    syncSidebarUser();
+    syncSidebarHouse();
+    renderSidebarDropdown();
+    renderHousesList();
+
+    // ─── LOGIN LOGIC ───
+
+    (function initLogin() {
+      const overlay   = document.getElementById('loginOverlay');
+      const emailEl   = document.getElementById('loginEmail');
+      const passEl    = document.getElementById('loginPassword');
+      const btn       = document.getElementById('loginBtn');
+      const errorBox  = document.getElementById('loginError');
+      const errorText = document.getElementById('loginErrorText');
+      const pwToggle  = document.getElementById('pwToggle');
+      const eyeIcon   = document.getElementById('eyeIcon');
+      const remember  = document.getElementById('rememberMe');
+
+      // Demo credentials
+      const VALID_EMAIL = 'admin@enerlytix.com';
+      const VALID_PASS  = 'password123';
+
+      // Auto-fill if remembered
+      const saved = localStorage.getItem('enerlytix_email');
+      if (saved) { emailEl.value = saved; remember.checked = true; }
+
+      // Toggle password visibility
+      pwToggle.addEventListener('click', () => {
+        const show = passEl.type === 'password';
+        passEl.type = show ? 'text' : 'password';
+        eyeIcon.innerHTML = show
+          ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+          : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+      });
+
+      function showError(msg) {
+        errorText.textContent = msg;
+        errorBox.classList.add('show');
+        emailEl.classList.add('error');
+        passEl.classList.add('error');
+        // Shake animation
+        errorBox.style.animation = 'none';
+        requestAnimationFrame(() => {
+          errorBox.style.animation = 'cardIn .3s ease';
+        });
+      }
+
+      function clearError() {
+        errorBox.classList.remove('show');
+        emailEl.classList.remove('error');
+        passEl.classList.remove('error');
+      }
+
+      emailEl.addEventListener('input', clearError);
+      passEl.addEventListener('input', clearError);
+
+      function doLogin() {
+        const email = emailEl.value.trim();
+        const pass  = passEl.value;
+
+        if (!email) { showError('กรุณากรอกอีเมล'); emailEl.focus(); return; }
+        if (!pass)  { showError('กรุณากรอกรหัสผ่าน'); passEl.focus(); return; }
+
+        btn.classList.add('loading');
+        clearError();
+
+        setTimeout(() => {
+          btn.classList.remove('loading');
+
+          if (email === VALID_EMAIL && pass === VALID_PASS) {
+            if (remember.checked) localStorage.setItem('enerlytix_email', email);
+            else localStorage.removeItem('enerlytix_email');
+
+            // Fade out login
+            overlay.style.transition = 'opacity .4s ease, transform .4s ease';
+            overlay.style.opacity = '0';
+            overlay.style.transform = 'scale(1.02)';
+            setTimeout(() => overlay.classList.add('hidden'), 400);
+          } else {
+            showError('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+            passEl.value = '';
+            passEl.focus();
+          }
+        }, 900);
+      }
+
+      btn.addEventListener('click', doLogin);
+      passEl.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+      emailEl.addEventListener('keydown', e => { if (e.key === 'Enter') passEl.focus(); });
+    })();
+
+    // ─── INIT ───
+
+    updateVisibility();
+  </script>
+</body>
+
+</html>
